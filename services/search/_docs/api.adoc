@@ -1,0 +1,87 @@
+= Search Service API Documentation
+
+== Overview
+
+The Search Service provides endpoints for users to discover and connect with other users based on various criteria, such as name, username, and interests.
+
+== Endpoints
+
+=== Search Users [GET /api/search/users]
+
+Search for users based on specified criteria.
+
+==== Request
+
+[source,json]
+----
+GET /api/search/users?q=John&limit=10
+----
+
+- `q`: (Optional) The search query.
+- `limit`: (Optional) The maximum number of users to return (default is 10).
+
+==== Response
+
+Upon successful user search, the server responds with a status code of `200 OK` and returns a list of matching users.
+
+[source,json]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  {
+    "userId": "user123",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john@example.com"
+  },
+  {
+    "userId": "user456",
+    "firstName": "John",
+    "lastName": "Smith",
+    "email": "john.smith@example.com"
+  }
+]
+----
+
+=== Search Content [GET /api/search/content]
+
+Search for content based on specified criteria.
+
+==== Request
+
+[source,json]
+----
+GET /api/search/content?q=travel&limit=5
+----
+
+- `q`: (Optional) The search query.
+- `limit`: (Optional) The maximum number of content items to return (default is 5).
+
+==== Response
+
+Upon successful content search, the server responds with a status code of `200 OK` and returns a list of matching content items.
+
+[source,json]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  {
+    "contentId": "content123",
+    "title": "Travel Tips: Exploring Europe on a Budget",
+    "type": "article",
+    "author": "Jane Doe",
+    "createdAt": "2024-04-01T12:00:00Z"
+  },
+  {
+    "contentId": "content456",
+    "title": "10 Must-Visit Destinations for Adventure Seekers",
+    "type": "list",
+    "author": "John Smith",
+    "createdAt": "2024-03-15T09:30:00Z"
+  }
+]
+----

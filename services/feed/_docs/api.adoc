@@ -1,0 +1,90 @@
+= Feed Service API Documentation
+
+== Overview
+
+The Feed Service provides endpoints for generating personalized feeds for users based on their preferences, followed accounts, and recent interactions.
+
+== Endpoints
+
+=== Get Personalized Feed [GET /api/feed]
+
+Retrieve a personalized feed for the authenticated user.
+
+==== Request
+
+[source]
+----
+GET /api/feed
+----
+
+==== Response
+
+Upon successful feed retrieval, the server responds with a status code of `200 OK` and returns a list of content items in the feed.
+
+[source,json]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  {
+    "contentId": 1,
+    "userId": 2,
+    "contentType": "text",
+    "text": "This is a sample text post.",
+    "createdAt": "2024-04-10T12:00:00Z"
+  },
+  {
+    "contentId": 2,
+    "userId": 3,
+    "contentType": "image",
+    "imageUrl": "https://example.com/image.jpg",
+    "createdAt": "2024-04-10T12:30:00Z"
+  }
+]
+----
+
+=== Like Content [POST /api/feed/{contentId}/like]
+
+Like a specific content item in the feed.
+
+==== Request
+
+[source,json]
+----
+POST /api/feed/1/like
+----
+
+==== Response
+
+Upon successful content liking, the server responds with a status code of `200 OK`.
+
+[source]
+----
+HTTP/1.1 200 OK
+----
+
+=== Share Content [POST /api/feed/{contentId}/share]
+
+Share a specific content item from the feed.
+
+==== Request
+
+[source,json]
+----
+POST /api/feed/2/share
+Content-Type: application/json
+
+{
+  "recipientId": 4
+}
+----
+
+==== Response
+
+Upon successful content sharing, the server responds with a status code of `200 OK`.
+
+[source]
+----
+HTTP/1.1 200 OK
+----

@@ -1,0 +1,102 @@
+= System Service API Documentation
+
+== Overview
+
+The System Service provides endpoints for managing system-related functionalities, such as logging, monitoring, and rate limiting.
+
+== Endpoints
+
+=== Log Event [POST /api/system/log]
+
+Log an event or message to the system log.
+
+==== Request
+
+[source,json]
+----
+POST /api/system/log
+Content-Type: application/json
+
+{
+  "level": "info",
+  "message": "User 'user123' logged in successfully."
+}
+----
+
+- `level`: (Required) The log level (e.g., "info", "warn", "error").
+- `message`: (Required) The log message.
+
+==== Response
+
+Upon successful logging of the event, the server responds with a status code of `204 No Content`.
+
+[source,json]
+----
+HTTP/1.1 204 No Content
+Content-Length: 0
+----
+
+=== Monitor System [GET /api/system/monitor]
+
+Monitor the system health and performance.
+
+==== Request
+
+[source,json]
+----
+GET /api/system/monitor
+----
+
+- No request parameters are required.
+
+==== Response
+
+Upon successful monitoring request, the server responds with a status code of `200 OK` and returns system health and performance metrics.
+
+[source,json]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "cpuUsage": "35%",
+  "memoryUsage": "50%",
+  "diskUsage": "70%",
+  "networkTraffic": {
+    "incoming": "1000KB/s",
+    "outgoing": "800KB/s"
+  }
+}
+----
+
+=== Rate Limit [POST /api/system/rate-limit]
+
+Apply rate limiting to a specific endpoint or operation.
+
+==== Request
+
+[source,json]
+----
+POST /api/system/rate-limit
+Content-Type: application/json
+
+{
+  "endpoint": "/api/content/create",
+  "limit": 100,
+  "interval": "1h"
+}
+----
+
+- `endpoint`: (Required) The endpoint or operation to apply rate limiting to.
+- `limit`: (Required) The maximum number of requests allowed within the specified interval.
+- `interval`: (Required) The duration of the rate limiting interval (e.g., "1h" for 1 hour).
+
+==== Response
+
+Upon successful application of rate limiting, the server responds with a status code of `204 No Content`.
+
+[source,json]
+----
+HTTP/1.1 204 No Content
+Content-Length: 0
+----
