@@ -6,11 +6,15 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/gofiber/fiber"
+	fiber "github.com/gofiber/fiber/v2"
 	"github.com/trillyai/backend-microservices/core/bootstrap"
 	"github.com/trillyai/backend-microservices/core/database/postgres"
 	"github.com/trillyai/backend-microservices/core/database/tables"
-	"github.com/trillyai/backend-microservices/services/auth/server"
+	"github.com/trillyai/backend-microservices/core/logger"
+	"github.com/trillyai/backend-microservices/services/auth/contracts"
+	"github.com/trillyai/backend-microservices/services/auth/handler"
+	"github.com/trillyai/backend-microservices/services/auth/repository"
+	"github.com/trillyai/backend-microservices/services/auth/service"
 )
 
 func init() {
@@ -19,7 +23,7 @@ func init() {
 }
 
 func main() {
-	app := server.GetServerApp()
+	app := GetServerApp()
 	if err := StartServerWithGracefulShutdown(app); err != nil {
 		log.Fatalf("Error starting server: %v", err)
 	}
@@ -44,4 +48,30 @@ func StartServerWithGracefulShutdown(app *fiber.App) error {
 
 	log.Println("Server shutdown completed")
 	return nil
+}
+
+func GetServerApp() *fiber.App {
+	app := fiber.New()
+	logger := logger.NewLogger("auth-server")
+
+	handler := getHandler()
+	logger.Debug("Handler instance created")
+
+	app.Post("/register", handler.Register)
+
+	app.Get("/ping", func(c *fiber.Ctx) error {
+		c.Write([]byte("pong dude"))
+		c.Status(fiber.StatusOK)
+		return nil
+	})
+
+	logger.Info("Server app initialization completed.")
+	return app
+}
+
+func getHandler() contracts.Handler {
+	repo := repository.NewRepository()
+	service := service.NewService(repo)
+	handler := handler.NewHandler(service)
+	return handler
 }
