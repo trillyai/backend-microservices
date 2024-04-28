@@ -19,7 +19,9 @@ import (
 
 func init() {
 	bootstrap.SetUpEnvironment()
-	postgres.MigrateSchema(tables.User{})
+	if err := postgres.MigrateSchema(tables.User{}); err != nil {
+		os.Exit(1)
+	}
 }
 
 func main() {

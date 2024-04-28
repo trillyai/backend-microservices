@@ -17,6 +17,7 @@ type User struct {
 	BirthDate   *time.Time `json:"birthDate"`
 	CreatedDate *time.Time `json:"createdDate"`
 	Biography   string     `json:"biography"`
+	//TODO: add image resource here
 
 	IsDeleted   bool
 	DeletedDate *time.Time

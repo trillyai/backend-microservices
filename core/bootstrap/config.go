@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/joho/godotenv"
-	"github.com/trillyai/backend-microservices/core/database/postgres"
+	"github.com/trillyai/backend-microservices/core/env"
 )
 
 var (
@@ -29,6 +29,8 @@ func SetUpEnvironment() {
 		"DB_DBNAME",
 
 		"HTTP_PORT",
+
+		"JWT_SECRET_KEY",
 	}
 
 	// Check if required environment variables exist
@@ -39,15 +41,17 @@ func SetUpEnvironment() {
 	}
 
 	// Set DB parameters
-	postgres.Host = Configs["DB_HOST"]
-	postgres.User = Configs["DB_USER"]
-	postgres.Password = Configs["DB_PASSWORD"]
-	postgres.Dbname = Configs["DB_DBNAME"]
+	env.Host = Configs["DB_HOST"]
+	env.User = Configs["DB_USER"]
+	env.Password = Configs["DB_PASSWORD"]
+	env.Dbname = Configs["DB_DBNAME"]
 	port, err := strconv.Atoi(Configs["DB_PORT"])
 	if err != nil {
 		log.Panicf("invalid required environment variable for db port: %s", err)
 	}
-	postgres.Port = port
+	env.Port = port
+
+	env.JwtSecretKet = Configs["JWT_SECRET_KEY"]
 }
 
 // loadEnvFileVars loads environment variables from dotenv files.

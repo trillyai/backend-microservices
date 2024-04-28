@@ -4,17 +4,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/trillyai/backend-microservices/core/env"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-)
-
-var (
-	Host     string
-	Port     int
-	User     string
-	Password string
-	Dbname   string
 )
 
 var DB *gorm.DB
@@ -24,7 +17,7 @@ func connectToDB() (*gorm.DB, error) {
 		return DB, nil
 	}
 
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", Host, Port, User, Password, Dbname)
+	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", env.Host, env.Port, env.User, env.Password, env.Dbname)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			TablePrefix:   "",

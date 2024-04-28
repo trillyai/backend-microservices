@@ -3,6 +3,7 @@ package postgres
 import (
 	"fmt"
 
+	"github.com/trillyai/backend-microservices/core/env"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -35,7 +36,7 @@ func MigrateSchema(dst ...interface{}) error {
 // createDatabaseIfNotExist checks if the specified database exists. If not, it creates the database.
 func createDatabaseIfNotExist() error {
 	// Create a connection string with database credentials
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s sslmode=disable", Host, Port, User, Password)
+	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s sslmode=disable", env.Host, env.Port, env.User, env.Password)
 
 	// Open a connection to the PostgreSQL database
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
@@ -51,14 +52,14 @@ func createDatabaseIfNotExist() error {
 	defer sqlDb.Close()
 
 	// Get the database name
-	dbName := Dbname
+	dbName := env.Dbname
 
 	// If the database name contains special characters, enclose it in single quotes
 	dbName = fmt.Sprintf(`"%s"`, dbName)
 
 	// Check if the database exists
 	var result int64
-	if err := db.Raw("SELECT COUNT(*) FROM pg_database WHERE datname = ?", Dbname).Scan(&result).Error; err != nil {
+	if err := db.Raw("SELECT COUNT(*) FROM pg_database WHERE datname = ?", env.Dbname).Scan(&result).Error; err != nil {
 		return err
 	}
 
