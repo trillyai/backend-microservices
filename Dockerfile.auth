@@ -1,0 +1,30 @@
+FROM golang:latest as build
+WORKDIR /build
+
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+COPY ./core ./core
+COPY ./services/auth ./services/auth
+
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o auth-service ./services/auth/main.go
+
+FROM scratch
+WORKDIR /app
+COPY --from=build /build/auth-service /app/
+
+# Set environment variables
+ENV HTTP_PORT=:8080
+ENV JWT_SECRET_KEY=topsecret
+ENV DB_HOST=192.168.215.3
+ENV DB_PORT=5432
+ENV DB_USER=postgres
+ENV DB_PASSWORD=cimri
+ENV DB_DBNAME=grad-auth
+
+EXPOSE 8080
+
+ENTRYPOINT ["/app/auth-service"]
+
+#  docker build -f ./Dockerfile.auth -t mehmetali10/auth-service .
