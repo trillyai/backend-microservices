@@ -7,9 +7,13 @@ import (
 	"os/signal"
 
 	fiber "github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	fiberLogger "github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/trillyai/backend-microservices/core/bootstrap"
 	"github.com/trillyai/backend-microservices/core/database/postgres"
 	"github.com/trillyai/backend-microservices/core/database/tables"
+	"github.com/trillyai/backend-microservices/core/env"
 	"github.com/trillyai/backend-microservices/core/logger"
 	"github.com/trillyai/backend-microservices/core/middleware"
 	"github.com/trillyai/backend-microservices/services/auth/contracts"
@@ -37,7 +41,7 @@ func StartServerWithGracefulShutdown(app *fiber.App) error {
 	signal.Notify(quit, os.Interrupt)
 
 	go func() {
-		if err := app.Listen(bootstrap.Configs["HTTP_PORT"]); err != nil && err != http.ErrServerClosed {
+		if err := app.Listen(env.HttpPort); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("ListenAndServe error: %v\n", err)
 		}
 	}()
@@ -56,23 +60,26 @@ func StartServerWithGracefulShutdown(app *fiber.App) error {
 func GetServerApp() *fiber.App {
 	app := fiber.New()
 	logger := logger.NewLogger("auth-server")
-
 	handler := getHandler()
+	authApp := addMiddlewares(app)
 	logger.Debug("Handler instance created")
 
 	app.Post("/register", handler.Register)
 	app.Post("/login", handler.Login)
-	app.Get("/ping", func(c *fiber.Ctx) error {
-		c.Write([]byte("pong dude"))
-		c.Status(fiber.StatusOK)
-		return nil
-	})
+	app.Get("/ping", ping)
 
-	authApp := app.Group("", middleware.AuthMiddleware)
 	authApp.Get("/get-profile", handler.GetProfile)
 
 	logger.Info("Server app initialization completed.")
 	return app
+}
+
+func addMiddlewares(app *fiber.App) fiber.Router {
+	app.Use(cors.New())
+	app.Use(fiberLogger.New())
+	app.Use(requestid.New())
+
+	return app.Group("", middleware.AuthMiddleware)
 }
 
 func getHandler() contracts.Handler {
@@ -80,4 +87,9 @@ func getHandler() contracts.Handler {
 	service := service.NewService(repo)
 	handler := handler.NewHandler(service)
 	return handler
+}
+
+func ping(c *fiber.Ctx) error {
+	c.Status(fiber.StatusOK).Send([]byte("pong dude"))
+	return nil
 }

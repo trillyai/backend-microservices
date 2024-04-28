@@ -9,3 +9,5 @@ var (
 	Password string
 	Dbname   string
 )
+
+var HttpPort string

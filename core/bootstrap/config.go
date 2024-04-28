@@ -50,8 +50,8 @@ func SetUpEnvironment() {
 		log.Panicf("invalid required environment variable for db port: %s", err)
 	}
 	env.Port = port
-
 	env.JwtSecretKet = []byte(Configs["JWT_SECRET_KEY"])
+	env.HttpPort = Configs["HTTP_PORT"]
 }
 
 // loadEnvFileVars loads environment variables from dotenv files.
