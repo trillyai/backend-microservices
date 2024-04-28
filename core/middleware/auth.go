@@ -30,6 +30,8 @@ func AuthMiddleware(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": err.Error()})
 	}
 
+	//TODO: validate session
+
 	// Set user claims to the context for further use
 	c.Locals("user", claims)
 	// Proceed to the next middleware or route handler

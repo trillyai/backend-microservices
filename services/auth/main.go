@@ -61,25 +61,25 @@ func GetServerApp() *fiber.App {
 	app := fiber.New()
 	logger := logger.NewLogger("auth-server")
 	handler := getHandler()
-	authApp := addMiddlewares(app)
+	addMiddlewares(app)
 	logger.Debug("Handler instance created")
 
 	app.Post("/register", handler.Register)
 	app.Post("/login", handler.Login)
 	app.Get("/ping", ping)
 
+	authApp := app.Group("", middleware.AuthMiddleware)
 	authApp.Get("/get-profile", handler.GetProfile)
+	authApp.Post("/logout", handler.Logout)
 
 	logger.Info("Server app initialization completed.")
 	return app
 }
 
-func addMiddlewares(app *fiber.App) fiber.Router {
+func addMiddlewares(app *fiber.App) {
 	app.Use(cors.New())
 	app.Use(fiberLogger.New())
 	app.Use(requestid.New())
-
-	return app.Group("", middleware.AuthMiddleware)
 }
 
 func getHandler() contracts.Handler {

@@ -12,22 +12,24 @@ import (
 )
 
 type Claims struct {
-	Id       uuid.UUID `json:"id"`
-	UserName string    `json:"username"`
-	Name     string    `json:"name"`
-	Surname  string    `json:"surname"`
-	Email    string    `json:"email"`
+	UserId    uuid.UUID `json:"userId"`
+	SessionId uuid.UUID `json:"sessionId"`
+	UserName  string    `json:"username"`
+	Name      string    `json:"name"`
+	Surname   string    `json:"surname"`
+	Email     string    `json:"email"`
 	jwt.StandardClaims
 }
 
 func CreateJwtToken(user tables.User, sessionUuid string) (string, error) {
 
 	claims := &Claims{
-		Id:       user.Id,
-		UserName: user.Username,
-		Name:     user.Name,
-		Surname:  user.Surname,
-		Email:    user.Email,
+		UserId:    user.Id,
+		UserName:  user.Username,
+		SessionId: uuid.MustParse(sessionUuid),
+		Name:      user.Name,
+		Surname:   user.Surname,
+		Email:     user.Email,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(108 * 24 * time.Hour).Unix(),
 		},
