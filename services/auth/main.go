@@ -11,6 +11,7 @@ import (
 	"github.com/trillyai/backend-microservices/core/database/postgres"
 	"github.com/trillyai/backend-microservices/core/database/tables"
 	"github.com/trillyai/backend-microservices/core/logger"
+	"github.com/trillyai/backend-microservices/core/middleware"
 	"github.com/trillyai/backend-microservices/services/auth/contracts"
 	"github.com/trillyai/backend-microservices/services/auth/handler"
 	"github.com/trillyai/backend-microservices/services/auth/repository"
@@ -60,14 +61,15 @@ func GetServerApp() *fiber.App {
 	logger.Debug("Handler instance created")
 
 	app.Post("/register", handler.Register)
-
 	app.Post("/login", handler.Login)
-
 	app.Get("/ping", func(c *fiber.Ctx) error {
 		c.Write([]byte("pong dude"))
 		c.Status(fiber.StatusOK)
 		return nil
 	})
+
+	authApp := app.Group("", middleware.AuthMiddleware)
+	authApp.Get("/get-profile", handler.GetProfile)
 
 	logger.Info("Server app initialization completed.")
 	return app
