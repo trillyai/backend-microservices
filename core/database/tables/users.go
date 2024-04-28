@@ -7,9 +7,14 @@ import (
 	"gorm.io/gorm"
 )
 
+func (User) TableName() string {
+	return "user_tb"
+}
+
 type User struct {
 	Id          uuid.UUID  `json:"id" gorm:"type:uuid;primaryKey"`
-	UserName    string     `json:"username" gorm:"unique"`
+	Username    string     `json:"username" gorm:"unique"`
+	Password    string     `json:"password"`
 	Name        string     `json:"name"`
 	Surname     string     `json:"surname"`
 	Email       string     `json:"email"`

@@ -51,7 +51,7 @@ func SetUpEnvironment() {
 	}
 	env.Port = port
 
-	env.JwtSecretKet = Configs["JWT_SECRET_KEY"]
+	env.JwtSecretKet = []byte(Configs["JWT_SECRET_KEY"])
 }
 
 // loadEnvFileVars loads environment variables from dotenv files.

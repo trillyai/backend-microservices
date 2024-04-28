@@ -19,7 +19,7 @@ import (
 
 func init() {
 	bootstrap.SetUpEnvironment()
-	if err := postgres.MigrateSchema(tables.User{}); err != nil {
+	if err := postgres.MigrateSchema(tables.User{}, tables.Session{}); err != nil {
 		os.Exit(1)
 	}
 }
@@ -60,6 +60,8 @@ func GetServerApp() *fiber.App {
 	logger.Debug("Handler instance created")
 
 	app.Post("/register", handler.Register)
+
+	app.Post("/login", handler.Login)
 
 	app.Get("/ping", func(c *fiber.Ctx) error {
 		c.Write([]byte("pong dude"))

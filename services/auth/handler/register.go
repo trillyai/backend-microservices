@@ -37,7 +37,7 @@ func (handler handler) Register(c *fiber.Ctx) error {
 	// Call the service's Register method to process the registration request.
 	resp, err := handler.svc.Register(c.Context(), req)
 	if err != nil {
-		c.Status(fiber.StatusInternalServerError)
+		c.Status(fiber.StatusBadRequest)
 		handler.logger.Error(fmt.Sprintf("failed to process registration: %v", err))
 		c.JSON(err.Error())
 		return err

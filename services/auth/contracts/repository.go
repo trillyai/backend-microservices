@@ -8,4 +8,5 @@ import (
 
 type Repository interface {
 	Register(ctx context.Context, request shared.RegisterRequest) (shared.RegisterResponse, error)
+	Login(ctx context.Context, request shared.LoginRequest) (shared.LoginResponse, error)
 }

@@ -1,6 +1,6 @@
 package env
 
-var JwtSecretKet string
+var JwtSecretKet []byte
 
 var (
 	Host     string
