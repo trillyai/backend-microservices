@@ -62,5 +62,10 @@ func (r repository) UpdateProfile(ctx context.Context, request shared.UpdateProf
 	if claims.UserName == "" {
 		return shared.UpdateProfileResponse{}, errors.New("context not found")
 	}
-	panic("unimplemented")
+
+	resp, err := postgres.Update[shared.UpdateProfileResponse, tables.User](ctx, map[string]interface{}{"Username": claims.UserName}, request)
+	if err != nil {
+		return shared.UpdateProfileResponse{}, err
+	}
+	return resp, nil
 }
