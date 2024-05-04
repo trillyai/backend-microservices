@@ -43,6 +43,28 @@ func Read[Dest any, Source any](ctx context.Context, rule any, args ...any) (Des
 	return resp, nil
 }
 
+func PaginatedRead[Dest any, Source any](ctx context.Context, rule any, offset uint32, limit uint32, args ...any) (Dest, error) {
+	connectToDB()
+	defer closeDB()
+
+	var resp Dest
+	var existingItem Source
+
+	db := DB.Debug().WithContext(ctx).
+		Model(&existingItem).
+		Where(map[string]interface{}{"IsDeleted": false}).
+		Where(rule, args...).
+		Offset(int(offset)).
+		Limit(int(limit)).
+		Find(&resp)
+
+	if db.Error != nil {
+		return resp, db.Error
+	}
+
+	return resp, nil
+}
+
 func Update[Dest any, Source any](ctx context.Context, rule any, req any) (Dest, error) {
 	connectToDB()
 	defer closeDB()

@@ -23,7 +23,9 @@ func NewRepository() contracts.Repository {
 	}
 }
 
+// //////////////////////////////////////////////////////////////////////////////////
 // GetProfileByUsername implements contracts.Repository.
+// //////////////////////////////////////////////////////////////////////////////////
 func (r repository) GetProfileByUsername(ctx context.Context, username string) (shared.GetProfileResponse, error) {
 	resp, err := postgres.Read[shared.GetProfileResponse, tables.User](ctx, map[string]interface{}{"Username": username})
 	if err != nil {
@@ -38,12 +40,23 @@ func (r repository) GetProfileByUsername(ctx context.Context, username string) (
 	return resp, nil
 }
 
+// //////////////////////////////////////////////////////////////////////////////////
 // GetProfiles implements contracts.Repository.
+// //////////////////////////////////////////////////////////////////////////////////
 func (r repository) GetProfiles(ctx context.Context, offset uint32, limit uint32) ([]shared.GetProfileResponse, error) {
-	panic("unimplemented")
+	if limit >= 50 {
+		return []shared.GetProfileResponse{}, errors.New("limit cannot exceed 50")
+	}
+	resp, err := postgres.PaginatedRead[[]shared.GetProfileResponse, tables.User](ctx, map[string]interface{}{}, offset, limit)
+	if err != nil {
+		return []shared.GetProfileResponse{}, err
+	}
+	return resp, nil
 }
 
+// //////////////////////////////////////////////////////////////////////////////////
 // UpdateProfile implements contracts.Repository.
+// //////////////////////////////////////////////////////////////////////////////////
 func (r repository) UpdateProfile(ctx context.Context, request shared.UpdateProfileRequest) (shared.UpdateProfileResponse, error) {
 	claims := ctx.Value("user").(*auth.Claims)
 	if claims.UserName == "" {
