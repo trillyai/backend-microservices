@@ -69,7 +69,6 @@ func GetServerApp() *fiber.App {
 	app.Get("/ping", ping)
 
 	authApp := app.Group("", middleware.AuthMiddleware)
-	authApp.Get("/get-profile", handler.GetProfile)
 	authApp.Post("/logout", handler.Logout)
 
 	logger.Info("Server app initialization completed.")
