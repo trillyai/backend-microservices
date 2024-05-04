@@ -17,10 +17,15 @@ import (
 	"github.com/trillyai/backend-microservices/core/logger"
 	"github.com/trillyai/backend-microservices/core/middleware"
 	"github.com/trillyai/backend-microservices/core/ping"
-	"github.com/trillyai/backend-microservices/services/auth/contracts"
-	"github.com/trillyai/backend-microservices/services/auth/handler"
-	"github.com/trillyai/backend-microservices/services/auth/repository"
-	"github.com/trillyai/backend-microservices/services/auth/service"
+	"github.com/trillyai/backend-microservices/services/profile/contracts"
+	"github.com/trillyai/backend-microservices/services/profile/handler"
+	"github.com/trillyai/backend-microservices/services/profile/repository"
+	"github.com/trillyai/backend-microservices/services/profile/service"
+)
+
+const (
+	profiles             = "/profiles"
+	profilesWithUsername = profiles + "/:username"
 )
 
 func init() {
@@ -60,17 +65,18 @@ func StartServerWithGracefulShutdown(app *fiber.App) error {
 
 func GetServerApp() *fiber.App {
 	app := fiber.New()
-	logger := logger.NewLogger("auth-server")
+	logger := logger.NewLogger("profile-server")
 	handler := getHandler()
+
 	addMiddlewares(app)
 	logger.Debug("Handler instance created")
 
-	app.Post("/register", handler.Register)
-	app.Post("/login", handler.Login)
 	app.Get(ping.PingPath, ping.Ping)
+	app.Get(profiles, handler.GetProfiles)
+	app.Get(profilesWithUsername, handler.GetProfile)
 
-	authApp := app.Group("", middleware.AuthMiddleware)
-	authApp.Post("/logout", handler.Logout)
+	authMw := app.Group("", middleware.AuthMiddleware)
+	authMw.Put(profiles, handler.UpdateProfile)
 
 	logger.Info("Server app initialization completed.")
 	return app

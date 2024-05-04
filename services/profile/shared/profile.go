@@ -1,6 +1,24 @@
 package shared
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
+type (
+	GetProfileResponse struct {
+		Id          uuid.UUID  `json:"id"`
+		Username    string     `json:"username"`
+		Name        string     `json:"name"`
+		Surname     string     `json:"surname"`
+		Email       string     `json:"email"`
+		Gender      string     `json:"gender"`
+		BirthDate   *time.Time `json:"birthDate"`
+		CreatedDate *time.Time `json:"createdDate"`
+		Biography   string     `json:"biography"`
+	}
+)
 
 type (
 	UpdateProfileRequest struct {
@@ -11,9 +29,7 @@ type (
 		Gender    string     `json:"gender" validate:"required"`
 		BirthDate *time.Time `json:"birthDate" validate:"required"`
 		Biography string     `json:"biography" validate:"required"`
-		// Password  string     `json:"password" validate:"required,min=8,max=20"`
 	}
-
 	UpdateProfileResponse struct {
 		Username       string     `json:"username"`
 		LastUpdateDate *time.Time `json:"lastUpatedDate"`
