@@ -16,6 +16,7 @@ import (
 	"github.com/trillyai/backend-microservices/core/env"
 	"github.com/trillyai/backend-microservices/core/logger"
 	"github.com/trillyai/backend-microservices/core/middleware"
+	"github.com/trillyai/backend-microservices/core/ping"
 	"github.com/trillyai/backend-microservices/services/auth/contracts"
 	"github.com/trillyai/backend-microservices/services/auth/handler"
 	"github.com/trillyai/backend-microservices/services/auth/repository"
@@ -66,7 +67,7 @@ func GetServerApp() *fiber.App {
 
 	app.Post("/register", handler.Register)
 	app.Post("/login", handler.Login)
-	app.Get("/ping", ping)
+	app.Get(ping.PingPath, ping.Ping)
 
 	authApp := app.Group("", middleware.AuthMiddleware)
 	authApp.Post("/logout", handler.Logout)
@@ -86,9 +87,4 @@ func getHandler() contracts.Handler {
 	service := service.NewService(repo)
 	handler := handler.NewHandler(service)
 	return handler
-}
-
-func ping(c *fiber.Ctx) error {
-	c.Status(fiber.StatusOK).Send([]byte("pong dude"))
-	return nil
 }

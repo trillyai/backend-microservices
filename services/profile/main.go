@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -17,10 +16,16 @@ import (
 	"github.com/trillyai/backend-microservices/core/env"
 	"github.com/trillyai/backend-microservices/core/logger"
 	"github.com/trillyai/backend-microservices/core/middleware"
+	"github.com/trillyai/backend-microservices/core/ping"
 	"github.com/trillyai/backend-microservices/services/profile/contracts"
 	"github.com/trillyai/backend-microservices/services/profile/handler"
 	"github.com/trillyai/backend-microservices/services/profile/repository"
 	"github.com/trillyai/backend-microservices/services/profile/service"
+)
+
+const (
+	profiles             = "/profiles"
+	profilesWithUsername = profiles + "/:username"
 )
 
 func init() {
@@ -62,15 +67,16 @@ func GetServerApp() *fiber.App {
 	app := fiber.New()
 	logger := logger.NewLogger("profile-server")
 	handler := getHandler()
+
 	addMiddlewares(app)
 	logger.Debug("Handler instance created")
 
-	app.Get("/ping", ping)
+	app.Get(ping.PingPath, ping.Ping)
+	app.Get(profiles, handler.GetProfiles)
+	app.Get(profilesWithUsername, handler.GetProfile)
 
-	profileApp := app.Group("", middleware.AuthMiddleware)
-
-	fmt.Printf("handler: %v\n", handler)
-	fmt.Printf("profileApp: %v\n", profileApp)
+	authMw := app.Group("", middleware.AuthMiddleware)
+	authMw.Put(profiles, handler.UpdateProfile)
 
 	logger.Info("Server app initialization completed.")
 	return app
@@ -87,9 +93,4 @@ func getHandler() contracts.Handler {
 	service := service.NewService(repo)
 	handler := handler.NewHandler(service)
 	return handler
-}
-
-func ping(c *fiber.Ctx) error {
-	c.Status(fiber.StatusOK).Send([]byte("pong dude"))
-	return nil
 }
