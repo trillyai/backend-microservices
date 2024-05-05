@@ -13,6 +13,6 @@ type handler struct {
 func NewHandler(svc contracts.Service) contracts.Handler {
 	return handler{
 		svc:    svc,
-		logger: *logger.NewLogger("profile-handler"),
+		logger: *logger.NewLogger("interaction-handler"),
 	}
 }
