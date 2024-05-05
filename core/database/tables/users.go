@@ -24,9 +24,9 @@ type User struct {
 	Biography   string     `json:"biography"`
 	//TODO: add image resource here
 
-	IsDeleted      bool
-	DeletedDate    *time.Time
-	LastUpdateDate *time.Time
+	IsDeleted       bool
+	DeletedDate     *time.Time
+	LastUpdatedDate *time.Time
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
@@ -39,6 +39,6 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 
 func (u *User) BeforeUpdate(tx *gorm.DB) (err error) {
 	now := time.Now()
-	u.LastUpdateDate = &now
+	u.LastUpdatedDate = &now
 	return
 }
