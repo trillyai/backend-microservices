@@ -12,10 +12,10 @@ func (Comment) TableName() string {
 }
 
 type Comment struct {
-	Id      uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
-	PostId  uuid.UUID `json:"postId"`
-	UserId  uuid.UUID `json:"userId"`
-	Comment string    `json:"comment"`
+	Id       uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
+	PostId   uuid.UUID `json:"postId"`
+	Username string    `json:"userName"`
+	Comment  string    `json:"comment"`
 
 	CreatedDate     *time.Time `json:"createdDate"`
 	LastUpdatedDate *time.Time `json:"lastUpdateDate"`

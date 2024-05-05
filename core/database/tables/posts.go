@@ -13,8 +13,8 @@ func (Post) TableName() string {
 
 type Post struct {
 	Id          uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
-	UserId      uuid.UUID `json:"userId"`
 	TripId      uuid.UUID `json:"tripId"`
+	Username    string    `json:"userName"`
 	Description string    `json:"description"`
 
 	CreatedDate     *time.Time `json:"createdDate"`
