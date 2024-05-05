@@ -12,8 +12,8 @@ type postHandler interface {
 	CreatePost(c *fiber.Ctx) error
 	UpdatePost(c *fiber.Ctx) error
 	DeletePost(c *fiber.Ctx) error
-	GetPost(fiber.Ctx) error  // postId
-	GetPosts(fiber.Ctx) error // userId
+	GetPost(c *fiber.Ctx) error  // postId
+	GetPosts(c *fiber.Ctx) error // userId
 }
 
 type commentHandler interface {
