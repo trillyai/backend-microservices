@@ -31,8 +31,7 @@ func init() {
 }
 
 func main() {
-	app := GetServerApp()
-	if err := StartServerWithGracefulShutdown(app); err != nil {
+	if err := StartServerWithGracefulShutdown(GetServerApp()); err != nil {
 		log.Fatalf("Error starting server: %v", err)
 	}
 }

@@ -17,6 +17,13 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}/services/profile/"
+        },
+        {
+            "name": "interaction-service",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/services/interaction/"
         }
     ]
 }
