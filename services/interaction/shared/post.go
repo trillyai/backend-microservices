@@ -10,7 +10,7 @@ type (
 	CreatePostRequest struct {
 		TripId      uuid.UUID `json:"tripId" validate:"required"`
 		Description string    `json:"description" validate:"required"`
-		// Username    string    `json:"userName" validate:"required"` //extract from token
+		Username    string
 	}
 	CreatePostResponse struct {
 		Id          uuid.UUID  `json:"id"`

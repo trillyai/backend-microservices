@@ -11,33 +11,33 @@ import (
 // CreatePost implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) CreatePost(ctx context.Context, req shared.CreatePostRequest) (shared.CreatePostResponse, error) {
-	panic("unimplemented")
+	return s.repository.CreatePost(ctx, req)
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
 // UpdatePost implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) UpdatePost(ctx context.Context, req shared.UpdatePostRequest) (shared.UpdatePostResponse, error) {
-	panic("unimplemented")
+	return s.repository.UpdatePost(ctx, req)
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
 // DeletePost implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) DeletePost(ctx context.Context, req shared.DeletePostRequest) (shared.DeletePostReesponse, error) {
-	panic("unimplemented")
+	return s.repository.DeletePost(ctx, req)
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
 // GetPost implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) GetPost(ctx context.Context, postId uuid.UUID) (shared.Post, error) {
-	panic("unimplemented")
+	return s.repository.GetPost(ctx, postId)
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
 // GetPosts implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) GetPosts(ctx context.Context, userId uuid.UUID, offset uint32, limit uint32) ([]shared.Post, error) {
-	panic("unimplemented")
+	return s.repository.GetPosts(ctx, userId, offset, limit)
 }

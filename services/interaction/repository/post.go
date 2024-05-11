@@ -2,8 +2,12 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
+	"github.com/trillyai/backend-microservices/core/auth"
+	"github.com/trillyai/backend-microservices/core/database/postgres"
+	"github.com/trillyai/backend-microservices/core/database/tables"
 	"github.com/trillyai/backend-microservices/services/interaction/shared"
 )
 
@@ -11,7 +15,22 @@ import (
 // CreatePost implements contracts.Repository.
 // //////////////////////////////////////////////////////////////////////////////////
 func (r repository) CreatePost(ctx context.Context, req shared.CreatePostRequest) (shared.CreatePostResponse, error) {
-	panic("unimplemented")
+
+	claims := ctx.Value("user").(*auth.Claims)
+	if claims.Name == "" {
+		return shared.CreatePostResponse{}, errors.New("context not found")
+	}
+
+	req.Username = claims.UserName
+
+	resp, err := postgres.Create[shared.CreatePostResponse, tables.Post](ctx, req)
+	if err != nil {
+		r.logger.Error(err.Error())
+		return shared.CreatePostResponse{}, err
+	}
+
+	return resp, nil
+
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
