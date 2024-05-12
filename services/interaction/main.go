@@ -24,6 +24,14 @@ import (
 	"github.com/trillyai/backend-microservices/services/interaction/service"
 )
 
+const (
+	posts  = "/posts"
+	postId = "/:postId"
+
+	comments = "/comments"
+	likes    = "/likes"
+)
+
 func init() {
 	bootstrap.SetUpEnvironment()
 	if err := postgres.MigrateSchema(tables.Post{}, tables.Comment{}, tables.Like{}); err != nil {
@@ -39,15 +47,21 @@ func main() {
 
 func GetServerApp() *fiber.App {
 	app := fiber.New()
-	logger := logger.NewLogger("auth-server")
+	logger := logger.NewLogger("interaction-server")
 	handler := getHandler()
 	addMiddlewares(app)
 	logger.Debug("Handler instance created")
 
 	app.Get(ping.PingPath, ping.Ping)
 
+	app.Get(posts, handler.GetPosts)
+	app.Get(posts+postId, handler.GetPost)
+
 	authApp := app.Group("", middleware.AuthMiddleware)
-	authApp.Post("post", handler.CreatePost)
+
+	authApp.Post(posts, handler.CreatePost)
+	authApp.Put(posts, handler.UpdatePost)
+	authApp.Delete(posts, handler.DeletePost)
 
 	logger.Info("Server app initialization completed.")
 	return app
