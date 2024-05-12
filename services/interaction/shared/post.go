@@ -23,10 +23,11 @@ type (
 		Id          uuid.UUID `json:"id" validate:"required"`
 		TripId      uuid.UUID `json:"tripId" validate:"required"`
 		Description string    `json:"description" validate:"required"`
-		// Username    string    `json:"userName" validate:"required"` //extract from token
 	}
 	UpdatePostResponse struct {
 		Id          uuid.UUID  `json:"id"`
+		TripId      uuid.UUID  `json:"tripId"`
+		Description string     `json:"description"`
 		UpdatedDate *time.Time `json:"updateDate"`
 	}
 )
