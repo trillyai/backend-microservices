@@ -129,7 +129,7 @@ func (r repository) GetPosts(ctx context.Context, userId uuid.UUID, offset uint3
 		return []shared.Post{}, errors.New("user not exists")
 	}
 
-	resp, err := postgres.Read[[]shared.Post, tables.Post](ctx, map[string]interface{}{"Username": user.Username})
+	resp, err := postgres.PaginatedRead[[]shared.Post, tables.Post](ctx, map[string]interface{}{"Username": user.Username}, offset, limit)
 	if err != nil {
 		r.logger.Error(err.Error())
 		return []shared.Post{}, err

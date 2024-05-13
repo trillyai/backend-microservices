@@ -11,33 +11,33 @@ import (
 // CreateComment implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) CreateComment(ctx context.Context, req shared.CreateCommentRequest) (shared.CreateCommentResponse, error) {
-	panic("unimplemented")
+	return s.CreateComment(ctx, req)
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
 // UpdateComment implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) UpdateComment(ctx context.Context, req shared.UpdateCommentRequest) (shared.UpdateCommentResponse, error) {
-	panic("unimplemented")
+	return s.UpdateComment(ctx, req)
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
 // DeleteComment implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) DeleteComment(ctx context.Context, req shared.DeleteCommentRequest) (shared.DeleteCommentReesponse, error) {
-	panic("unimplemented")
+	return s.DeleteComment(ctx, req)
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
 // GetComment implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) GetComment(ctx context.Context, commentId uuid.UUID) (shared.Comment, error) {
-	panic("unimplemented")
+	return s.repository.GetComment(ctx, commentId)
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
 // GetComments implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
-func (s service) GetComments(ctx context.Context, uuid uuid.UUID, forPostId bool, forUserId bool, offset uint32, limit uint32) ([]shared.Comment, error) {
-	panic("unimplemented")
+func (s service) GetComments(ctx context.Context, uuid uuid.UUID, username string, forPostId bool, offset uint32, limit uint32) ([]shared.Comment, error) {
+	return s.GetComments(ctx, uuid, username, forPostId, offset, limit)
 }

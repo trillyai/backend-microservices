@@ -8,9 +8,9 @@ import (
 
 type (
 	CreateCommentRequest struct {
-		PostId  uuid.UUID `json:"postId" validate:"required"`
-		Comment string    `json:"comment" validate:"required"`
-		// Username string    `json:"userName" validate:"required"` //extract from token
+		PostId   uuid.UUID `json:"postId" validate:"required"`
+		Comment  string    `json:"comment" validate:"required"`
+		Username string    //extract from token
 	}
 	CreateCommentResponse struct {
 		Id          uuid.UUID  `json:"id"`
@@ -20,9 +20,8 @@ type (
 
 type (
 	UpdateCommentRequest struct {
-		TripId      uuid.UUID `json:"tripId" validate:"required"`
-		Description string    `json:"description" validate:"required"`
-		// Username    string    `json:"userName" validate:"required"` //extract from token
+		Id      uuid.UUID `json:"id" validate:"required"`
+		Comment string    `json:"comment" validate:"required"`
 	}
 	UpdateCommentResponse struct {
 		Id          uuid.UUID  `json:"id"`
@@ -35,14 +34,13 @@ type (
 		Id uuid.UUID `json:"id"`
 	}
 	DeleteCommentReesponse struct {
-		Id          uuid.UUID  `json:"id"`
 		DeletedDate *time.Time `json:"deletedDate"`
 	}
 )
 
 type Comment struct {
 	Id          uuid.UUID `json:"id"`
-	TripId      uuid.UUID `json:"tripId"`
+	PostId      uuid.UUID `json:"postId"`
 	Username    string    `json:"userName"`
 	Description string    `json:"description"`
 }

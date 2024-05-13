@@ -37,7 +37,6 @@ type (
 		Id uuid.UUID `json:"id" validate:"required"`
 	}
 	DeletePostReesponse struct {
-		Id          uuid.UUID  `json:"id"`
 		DeletedDate *time.Time `json:"deletedDate"`
 	}
 )
