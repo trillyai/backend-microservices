@@ -56,32 +56,46 @@ func GetServerApp() *fiber.App {
 	logger.Debug("Handler instance created")
 
 	app.Get(ping.PingPath, ping.Ping)
+	app.Get(posts, handler.GetPosts)
+	app.Get(posts+postId, handler.GetPost)
+
+	app.Get(comments, handler.GetComments)
+	app.Get(comments+commentId, handler.GetComment)
 
 	authApp := app.Group("", middleware.AuthMiddleware)
-	servePostEndpoints(app, authApp, handler)
-	serveCommentEndpoints(app, authApp, handler)
+
+	authApp.Post(posts, handler.CreatePost)
+	authApp.Put(posts, handler.UpdatePost)
+	authApp.Delete(posts, handler.DeletePost)
+
+	authApp.Post(comments, handler.CreateComment)
+	authApp.Put(comments, handler.UpdateComment)
+	authApp.Delete(comments, handler.DeleteComment)
+
+	// servePostEndpoints(app, authApp, handler)
+	// serveCommentEndpoints(app, authApp, handler)
 
 	logger.Info("Server app initialization completed.")
 	return app
 }
 
-func servePostEndpoints(app *fiber.App, authApp fiber.Router, handler contracts.Handler) {
-	app.Get(posts, handler.GetPosts)
-	app.Get(posts+postId, handler.GetPost)
+// func servePostEndpoints(app *fiber.App, authApp fiber.Router, handler contracts.Handler) {
+// 	app.Get(posts, handler.GetPosts)
+// 	app.Get(posts+postId, handler.GetPost)
 
-	authApp.Post(posts, handler.CreatePost)
-	authApp.Put(posts, handler.UpdatePost)
-	authApp.Delete(posts, handler.DeletePost)
-}
+// 	authApp.Post(posts, handler.CreatePost)
+// 	authApp.Put(posts, handler.UpdatePost)
+// 	authApp.Delete(posts, handler.DeletePost)
+// }
 
-func serveCommentEndpoints(app *fiber.App, authApp fiber.Router, handler contracts.Handler) {
-	app.Get(comments, handler.GetComments)
-	app.Get(comments+commentId, handler.GetComment)
+// func serveCommentEndpoints(app *fiber.App, authApp fiber.Router, handler contracts.Handler) {
+// 	app.Get(comments, handler.GetComments)
+// 	app.Get(comments+commentId, handler.GetComment)
 
-	authApp.Post(comments, handler.CreateComment)
-	authApp.Put(comments, handler.UpdateComment)
-	authApp.Delete(comments, handler.DeleteComment)
-}
+// 	authApp.Post(comments, handler.CreateComment)
+// 	authApp.Put(comments, handler.UpdateComment)
+// 	authApp.Delete(comments, handler.DeleteComment)
+// }
 
 func StartServerWithGracefulShutdown(app *fiber.App) error {
 	quit := make(chan os.Signal, 1)

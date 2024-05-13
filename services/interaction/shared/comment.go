@@ -39,8 +39,8 @@ type (
 )
 
 type Comment struct {
-	Id          uuid.UUID `json:"id"`
-	PostId      uuid.UUID `json:"postId"`
-	Username    string    `json:"userName"`
-	Description string    `json:"description"`
+	Id       uuid.UUID `json:"id"`
+	PostId   uuid.UUID `json:"postId"`
+	Username string    `json:"userName"`
+	Comment  string    `json:"comment"`
 }

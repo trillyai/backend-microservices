@@ -23,7 +23,7 @@ func (r repository) CreateComment(ctx context.Context, req shared.CreateCommentR
 
 	req.Username = claims.UserName
 
-	post, err := postgres.Read[tables.Post, tables.Post](ctx, map[string]interface{}{"PostId": req.PostId})
+	post, err := postgres.Read[tables.Post, tables.Post](ctx, map[string]interface{}{"Id": req.PostId})
 	if err != nil {
 		r.logger.Error(err.Error())
 		return shared.CreateCommentResponse{}, err
@@ -53,17 +53,13 @@ func (r repository) UpdateComment(ctx context.Context, req shared.UpdateCommentR
 		return shared.UpdateCommentResponse{}, errors.New("context not found")
 	}
 
-	post, err := postgres.Read[tables.Post, tables.Post](ctx, map[string]interface{}{"PostId": req.Id})
+	comment, err := postgres.Read[tables.Comment, tables.Comment](ctx, map[string]interface{}{"Id": req.Id})
 	if err != nil {
 		r.logger.Error(err.Error())
 		return shared.UpdateCommentResponse{}, err
 	}
 
-	if post.Description == "" {
-		return shared.UpdateCommentResponse{}, errors.New("post not found")
-	}
-
-	if post.Username != claims.UserName {
+	if comment.Username != claims.UserName {
 		return shared.UpdateCommentResponse{}, errors.New("unauthorized to update")
 	}
 

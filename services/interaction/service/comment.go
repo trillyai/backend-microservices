@@ -11,21 +11,21 @@ import (
 // CreateComment implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) CreateComment(ctx context.Context, req shared.CreateCommentRequest) (shared.CreateCommentResponse, error) {
-	return s.CreateComment(ctx, req)
+	return s.repository.CreateComment(ctx, req)
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
 // UpdateComment implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) UpdateComment(ctx context.Context, req shared.UpdateCommentRequest) (shared.UpdateCommentResponse, error) {
-	return s.UpdateComment(ctx, req)
+	return s.repository.UpdateComment(ctx, req)
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
 // DeleteComment implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) DeleteComment(ctx context.Context, req shared.DeleteCommentRequest) (shared.DeleteCommentReesponse, error) {
-	return s.DeleteComment(ctx, req)
+	return s.repository.DeleteComment(ctx, req)
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
@@ -39,5 +39,5 @@ func (s service) GetComment(ctx context.Context, commentId uuid.UUID) (shared.Co
 // GetComments implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) GetComments(ctx context.Context, uuid uuid.UUID, username string, forPostId bool, offset uint32, limit uint32) ([]shared.Comment, error) {
-	return s.GetComments(ctx, uuid, username, forPostId, offset, limit)
+	return s.repository.GetComments(ctx, uuid, username, forPostId, offset, limit)
 }
