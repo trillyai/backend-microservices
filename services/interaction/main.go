@@ -54,17 +54,20 @@ func GetServerApp() *fiber.App {
 
 	app.Get(ping.PingPath, ping.Ping)
 
+	authApp := app.Group("", middleware.AuthMiddleware)
+	servePostEndpoints(app, authApp, handler)
+
+	logger.Info("Server app initialization completed.")
+	return app
+}
+
+func servePostEndpoints(app *fiber.App, authApp fiber.Router, handler contracts.Handler) {
 	app.Get(posts, handler.GetPosts)
 	app.Get(posts+postId, handler.GetPost)
-
-	authApp := app.Group("", middleware.AuthMiddleware)
 
 	authApp.Post(posts, handler.CreatePost)
 	authApp.Put(posts, handler.UpdatePost)
 	authApp.Delete(posts, handler.DeletePost)
-
-	logger.Info("Server app initialization completed.")
-	return app
 }
 
 func StartServerWithGracefulShutdown(app *fiber.App) error {

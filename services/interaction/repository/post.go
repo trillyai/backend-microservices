@@ -82,7 +82,7 @@ func (r repository) DeletePost(ctx context.Context, req shared.DeletePostRequest
 	}
 
 	if post.Id != req.Id {
-		return shared.DeletePostReesponse{}, errors.New("post id does not match request id")
+		return shared.DeletePostReesponse{}, errors.New("item does not exists")
 	}
 
 	resp, err := postgres.Delete[shared.DeletePostReesponse, tables.Post](ctx, map[string]interface{}{"Id": req.Id, "Username": claims.UserName})
