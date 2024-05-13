@@ -28,8 +28,11 @@ const (
 	posts  = "/posts"
 	postId = "/:postId"
 
-	comments = "/comments"
-	likes    = "/likes"
+	comments  = "/comments"
+	commentId = "/:commentId"
+
+	likes  = "/likes"
+	likeId = "/:likeId"
 )
 
 func init() {
@@ -56,6 +59,7 @@ func GetServerApp() *fiber.App {
 
 	authApp := app.Group("", middleware.AuthMiddleware)
 	servePostEndpoints(app, authApp, handler)
+	serveCommentEndpoints(app, authApp, handler)
 
 	logger.Info("Server app initialization completed.")
 	return app
@@ -68,6 +72,15 @@ func servePostEndpoints(app *fiber.App, authApp fiber.Router, handler contracts.
 	authApp.Post(posts, handler.CreatePost)
 	authApp.Put(posts, handler.UpdatePost)
 	authApp.Delete(posts, handler.DeletePost)
+}
+
+func serveCommentEndpoints(app *fiber.App, authApp fiber.Router, handler contracts.Handler) {
+	app.Get(comments, handler.GetComments)
+	app.Get(comments+commentId, handler.GetComment)
+
+	authApp.Post(comments, handler.CreateComment)
+	authApp.Put(comments, handler.UpdateComment)
+	authApp.Delete(comments, handler.DeleteComment)
 }
 
 func StartServerWithGracefulShutdown(app *fiber.App) error {
