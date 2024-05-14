@@ -31,8 +31,7 @@ const (
 	comments  = "/comments"
 	commentId = "/:commentId"
 
-	likes  = "/likes"
-	likeId = "/:likeId"
+	likes = "/likes"
 )
 
 func init() {
@@ -63,6 +62,8 @@ func GetServerApp() *fiber.App {
 	app.Get(comments, handler.GetComments)
 	app.Get(comments+commentId, handler.GetComment)
 
+	app.Get(likes, handler.GetLikes)
+
 	authApp := app.Group("", middleware.AuthMiddleware)
 
 	authApp.Post(posts, handler.CreatePost)
@@ -72,6 +73,9 @@ func GetServerApp() *fiber.App {
 	authApp.Post(comments, handler.CreateComment)
 	authApp.Put(comments, handler.UpdateComment)
 	authApp.Delete(comments, handler.DeleteComment)
+
+	authApp.Post(likes, handler.CreateLike)
+	authApp.Delete(likes, handler.DeleteLike)
 
 	// servePostEndpoints(app, authApp, handler)
 	// serveCommentEndpoints(app, authApp, handler)
