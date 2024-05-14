@@ -11,19 +11,19 @@ import (
 // CreateLike implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) CreateLike(ctx context.Context, req shared.CreateLikeRequest) (shared.CreateLikeResponse, error) {
-	panic("unimplemented")
+	return s.repository.CreateLike(ctx, req)
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
 // DeleteLike implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) DeleteLike(ctx context.Context, req shared.DeleteLikeRequest) (shared.DeleteLikeResponse, error) {
-	panic("unimplemented")
+	return s.repository.DeleteLike(ctx, req)
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
 // GetLikes implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
 func (s service) GetLikes(ctx context.Context, uuid uuid.UUID, forPostId bool, forCommentId bool, offset uint32, limit uint32) ([]shared.Like, error) {
-	panic("unimplemented")
+	return s.repository.GetLikes(ctx, uuid, forPostId, forCommentId, offset, limit)
 }

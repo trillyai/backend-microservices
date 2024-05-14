@@ -105,7 +105,7 @@ func (r repository) GetLikes(ctx context.Context, uuid uuid.UUID, forPostId bool
 		key = "CommentId"
 	}
 
-	resp, err := postgres.Read[[]shared.Like, tables.Like](ctx, map[string]interface{}{key: uuid})
+	resp, err := postgres.PaginatedRead[[]shared.Like, tables.Like](ctx, map[string]interface{}{key: uuid}, offset, limit)
 	if err != nil {
 		r.logger.Error(err.Error())
 		return []shared.Like{}, err
