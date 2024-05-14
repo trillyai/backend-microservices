@@ -32,5 +32,5 @@ type commentService interface {
 type likeService interface {
 	CreateLike(ctx context.Context, req shared.CreateLikeRequest) (shared.CreateLikeResponse, error)
 	DeleteLike(ctx context.Context, req shared.DeleteLikeRequest) (shared.DeleteLikeResponse, error)
-	GetLikes(ctx context.Context, uuid uuid.UUID, forPostId, forUserId bool, offset, limit uint32) ([]shared.Like, error)
+	GetLikes(ctx context.Context, uuid uuid.UUID, forPostId, forCommentId bool, offset, limit uint32) ([]shared.Like, error)
 }

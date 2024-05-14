@@ -24,6 +24,6 @@ func (s service) DeleteLike(ctx context.Context, req shared.DeleteLikeRequest) (
 // //////////////////////////////////////////////////////////////////////////////////
 // GetLikes implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
-func (s service) GetLikes(ctx context.Context, uuid uuid.UUID, forPostId bool, forUserId bool, offset uint32, limit uint32) ([]shared.Like, error) {
+func (s service) GetLikes(ctx context.Context, uuid uuid.UUID, forPostId bool, forCommentId bool, offset uint32, limit uint32) ([]shared.Like, error) {
 	panic("unimplemented")
 }

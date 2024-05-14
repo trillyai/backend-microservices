@@ -94,6 +94,23 @@ func (r repository) DeleteLike(ctx context.Context, req shared.DeleteLikeRequest
 // //////////////////////////////////////////////////////////////////////////////////
 // GetLikes implements contracts.Repository.
 // //////////////////////////////////////////////////////////////////////////////////
-func (r repository) GetLikes(ctx context.Context, uuid uuid.UUID, forPostId bool, forUserId bool, offset uint32, limit uint32) (shared.CreateLikeResponse, error) {
-	panic("unimplemented")
+func (r repository) GetLikes(ctx context.Context, uuid uuid.UUID, forPostId bool, forCommentId bool, offset uint32, limit uint32) ([]shared.Like, error) {
+
+	var key string
+
+	switch forPostId {
+	case true:
+		key = "PostId"
+	default:
+		key = "CommentId"
+	}
+
+	resp, err := postgres.Read[[]shared.Like, tables.Like](ctx, map[string]interface{}{key: uuid})
+	if err != nil {
+		r.logger.Error(err.Error())
+		return []shared.Like{}, err
+	}
+
+	return resp, nil
+
 }
