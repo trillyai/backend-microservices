@@ -56,6 +56,7 @@ func GetServerApp() *fiber.App {
 	logger.Debug("Handler instance created")
 
 	app.Get(ping.PingPath, ping.Ping)
+
 	app.Get(posts, handler.GetPosts)
 	app.Get(posts+postId, handler.GetPost)
 

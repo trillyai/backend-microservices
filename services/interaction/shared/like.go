@@ -8,7 +8,9 @@ import (
 
 type (
 	CreateLikeRequest struct {
-		PostId uuid.UUID `json:"postId" validate:"required"`
+		PostId    uuid.UUID `json:"postId,omitempty"`
+		CommentId uuid.UUID `json:"commentId,omitempty"`
+		Username  string
 	}
 	CreateLikeResponse struct {
 		Id          uuid.UUID  `json:"id"`
@@ -20,14 +22,15 @@ type (
 	DeleteLikeRequest struct {
 		Id uuid.UUID `json:"id" validate:"required"`
 	}
-	DeleteLikeReesponse struct {
+	DeleteLikeResponse struct {
 		Id          uuid.UUID  `json:"id"`
 		DeletedDate *time.Time `json:"deletedDate"`
 	}
 )
 
 type Like struct {
-	Id       uuid.UUID `json:"id"`
-	PostId   uuid.UUID `json:"postId"`
-	Username string    `json:"userName"`
+	Id        uuid.UUID `json:"id"`
+	PostId    uuid.UUID `json:"postId,omitempty"`
+	CommentId uuid.UUID `json:"commentId,omitempty"`
+	Username  string    `json:"userName"`
 }

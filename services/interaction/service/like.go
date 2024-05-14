@@ -17,7 +17,7 @@ func (s service) CreateLike(ctx context.Context, req shared.CreateLikeRequest) (
 // //////////////////////////////////////////////////////////////////////////////////
 // DeleteLike implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
-func (s service) DeleteLike(ctx context.Context, req shared.DeleteLikeRequest) (shared.DeleteLikeReesponse, error) {
+func (s service) DeleteLike(ctx context.Context, req shared.DeleteLikeRequest) (shared.DeleteLikeResponse, error) {
 	panic("unimplemented")
 }
 

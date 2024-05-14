@@ -12,9 +12,10 @@ func (Like) TableName() string {
 }
 
 type Like struct {
-	Id       uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
-	PostId   uuid.UUID `json:"postId"`
-	Username string    `json:"userName"`
+	Id        uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
+	PostId    uuid.UUID `json:"postId"`
+	CommentId uuid.UUID `json:"commentId"`
+	Username  string    `json:"userName"`
 
 	CreatedDate *time.Time `json:"createdDate"`
 	IsDeleted   bool       `json:"isDeleted"`

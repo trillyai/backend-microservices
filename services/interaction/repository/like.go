@@ -17,7 +17,7 @@ func (r repository) CreateLike(ctx context.Context, req shared.CreateLikeRequest
 // //////////////////////////////////////////////////////////////////////////////////
 // DeleteLike implements contracts.Repository.
 // //////////////////////////////////////////////////////////////////////////////////
-func (r repository) DeleteLike(ctx context.Context, req shared.DeleteLikeRequest) (shared.DeleteLikeReesponse, error) {
+func (r repository) DeleteLike(ctx context.Context, req shared.DeleteLikeRequest) (shared.DeleteLikeResponse, error) {
 	panic("unimplemented")
 }
 
