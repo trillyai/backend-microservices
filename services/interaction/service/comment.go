@@ -38,6 +38,6 @@ func (s service) GetComment(ctx context.Context, commentId uuid.UUID) (shared.Co
 // //////////////////////////////////////////////////////////////////////////////////
 // GetComments implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
-func (s service) GetComments(ctx context.Context, uuid uuid.UUID, username string, forPostId bool, offset uint32, limit uint32) ([]shared.Comment, error) {
+func (s service) GetComments(ctx context.Context, uuid uuid.UUID, username string, forPostId bool, offset uint32, limit uint32) (shared.Comments, error) {
 	return s.repository.GetComments(ctx, uuid, username, forPostId, offset, limit)
 }

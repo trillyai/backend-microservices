@@ -26,7 +26,7 @@ type commentService interface {
 	UpdateComment(ctx context.Context, req shared.UpdateCommentRequest) (shared.UpdateCommentResponse, error)
 	DeleteComment(ctx context.Context, req shared.DeleteCommentRequest) (shared.DeleteCommentReesponse, error)
 	GetComment(ctx context.Context, commentId uuid.UUID) (shared.Comment, error)
-	GetComments(ctx context.Context, uuid uuid.UUID, username string, forPostId bool, offset uint32, limit uint32) ([]shared.Comment, error)
+	GetComments(ctx context.Context, uuid uuid.UUID, username string, forPostId bool, offset uint32, limit uint32) (shared.Comments, error)
 }
 
 type likeService interface {

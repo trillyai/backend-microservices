@@ -44,3 +44,8 @@ type Comment struct {
 	Username string    `json:"userName"`
 	Comment  string    `json:"comment"`
 }
+
+type Comments struct {
+	Comments     []Comment `json:"comments"`
+	CommentCount uint64    `json:"commentCount"`
+}

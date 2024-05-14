@@ -8,6 +8,7 @@ import (
 	"github.com/trillyai/backend-microservices/core/auth"
 	"github.com/trillyai/backend-microservices/core/database/postgres"
 	"github.com/trillyai/backend-microservices/core/database/tables"
+	"github.com/trillyai/backend-microservices/core/utils"
 	"github.com/trillyai/backend-microservices/services/interaction/shared"
 )
 
@@ -121,7 +122,7 @@ func (r repository) GetComment(ctx context.Context, commentId uuid.UUID) (shared
 // //////////////////////////////////////////////////////////////////////////////////
 // GetComments implements contracts.Repository.
 // //////////////////////////////////////////////////////////////////////////////////
-func (r repository) GetComments(ctx context.Context, uuid uuid.UUID, username string, forPostId bool, offset uint32, limit uint32) ([]shared.Comment, error) {
+func (r repository) GetComments(ctx context.Context, uuid uuid.UUID, username string, forPostId bool, offset uint32, limit uint32) (shared.Comments, error) {
 
 	var key string
 	var value interface{}
@@ -135,12 +136,23 @@ func (r repository) GetComments(ctx context.Context, uuid uuid.UUID, username st
 		value = username
 	}
 
-	resp, err := postgres.PaginatedRead[[]shared.Comment, tables.Comment](ctx, map[string]interface{}{key: value}, offset, limit)
+	rule := map[string]interface{}{key: value}
+
+	resp, err := postgres.PaginatedRead[[]shared.Comment, tables.Comment](ctx, rule, offset, limit)
 	if err != nil {
 		r.logger.Error(err.Error())
-		return []shared.Comment{}, err
+		return shared.Comments{}, err
 	}
 
-	return resp, nil
+	ids, err := postgres.Read[[]utils.JustId, tables.Comment](ctx, rule)
+	if err != nil {
+		r.logger.Error(err.Error())
+		return shared.Comments{}, err
+	}
+
+	return shared.Comments{
+		Comments:     resp,
+		CommentCount: uint64(len(ids)),
+	}, nil
 
 }
