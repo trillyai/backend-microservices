@@ -20,6 +20,11 @@ func NewService(repository contracts.Repository) contracts.Service {
 	}
 }
 
+// UploadProfileImage implements contracts.Service.
+func (s service) UploadProfileImage(ctx context.Context, request shared.UploadProfileImageRequest) (shared.UploadProfileImageResponse, error) {
+	return s.repository.UploadProfileImage(ctx, request)
+}
+
 // GetProfileByUsername implements contracts.Service.
 func (s service) GetProfileByUsername(ctx context.Context, username string) (shared.GetProfileResponse, error) {
 	return s.repository.GetProfileByUsername(ctx, username)

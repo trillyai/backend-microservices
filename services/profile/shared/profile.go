@@ -1,6 +1,7 @@
 package shared
 
 import (
+	"mime/multipart"
 	"time"
 
 	"github.com/google/uuid"
@@ -33,5 +34,14 @@ type (
 	UpdateProfileResponse struct {
 		Username       string     `json:"username"`
 		LastUpdateDate *time.Time `json:"lastUpatedDate"`
+	}
+)
+
+type (
+	UploadProfileImageRequest struct {
+		File *multipart.FileHeader `json:"file" validate:"required"`
+	}
+	UploadProfileImageResponse struct {
+		Url string `json:"url"`
 	}
 )
