@@ -1,9 +1,7 @@
 package handler
 
 import (
-	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -29,20 +27,21 @@ func NewHandler(svc contracts.Service) contracts.Handler {
 // GetProfile implements contracts.Handler.
 // //////////////////////////////////////////////////////////////////////////////////
 func (handler handler) GetProfile(c *fiber.Ctx) error {
+
 	username := c.Params("username")
 	if strings.TrimSpace(username) == "" {
-		return errors.New("username required")
+		return c.Status(fiber.StatusBadRequest).SendString("username required")
 	}
 
 	resp, err := handler.svc.GetProfileByUsername(c.Context(), username)
 	if err != nil {
 		handler.logger.Error(fmt.Sprintf("failed to process get profile: %v", err))
-		c.Status(fiber.StatusBadRequest).JSON(err.Error())
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+
 	}
 
-	c.Status(fiber.StatusOK).JSON(resp)
-	return nil
+	return c.Status(fiber.StatusOK).JSON(resp)
+
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
@@ -50,56 +49,44 @@ func (handler handler) GetProfile(c *fiber.Ctx) error {
 // //////////////////////////////////////////////////////////////////////////////////
 func (handler handler) GetProfiles(c *fiber.Ctx) error {
 
-	offsetStr := c.Query("offset")
-	limitStr := c.Query("limit")
-
-	// Convert query parameters to uint32
-	offset, err := strconv.ParseUint(offsetStr, 10, 32)
+	offset, limit, err := utils.GetOffSetAndLimit(c.Query("offset"), c.Query("limit"))
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString("Invalid offset value")
-	}
-
-	limit, err := strconv.ParseUint(limitStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString("Invalid limit value")
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
 	resp, err := handler.svc.GetProfiles(c.Context(), uint32(offset), uint32(limit))
 	if err != nil {
 		handler.logger.Error(fmt.Sprintf("failed to process get profiles: %v", err))
-		c.Status(fiber.StatusBadRequest).JSON(err.Error())
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
-	c.Status(fiber.StatusOK).JSON(resp)
-	return nil
+	return c.Status(fiber.StatusOK).JSON(resp)
+
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
 // UpdateProfile implements contracts.Handler.
 // //////////////////////////////////////////////////////////////////////////////////
 func (handler handler) UpdateProfile(c *fiber.Ctx) error {
+
 	var req shared.UpdateProfileRequest
 
 	if err := c.BodyParser(&req); err != nil {
 		handler.logger.Error(fmt.Sprintf("failed to parse request body: %v", err))
-		c.Status(fiber.StatusBadRequest).JSON(err.Error())
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
 	if err := utils.ValidateStruct(req); err != nil {
 		handler.logger.Error(err.Error())
-		c.Status(fiber.StatusBadRequest).JSON(err.Error())
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
 	resp, err := handler.svc.UpdateProfile(c.Context(), req)
 	if err != nil {
 		handler.logger.Error(fmt.Sprintf("failed to process update-profile: %v", err))
-		c.Status(fiber.StatusBadRequest).JSON(err.Error())
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
-	c.Status(fiber.StatusOK).JSON(resp)
-	return nil
+	return c.Status(fiber.StatusOK).JSON(resp)
+
 }

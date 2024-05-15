@@ -2,7 +2,6 @@ package handler
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -121,21 +120,12 @@ func (handler handler) GetComment(c *fiber.Ctx) error {
 // //////////////////////////////////////////////////////////////////////////////////
 func (handler handler) GetComments(c *fiber.Ctx) error {
 
-	offsetStr := c.Query("offset")
-	limitStr := c.Query("limit")
 	username := c.Query("username")
 	postIdStr := c.Query("postId")
 
-	offset, err := strconv.ParseUint(offsetStr, 10, 32)
+	offset, limit, err := utils.GetOffSetAndLimit(c.Query("offset"), c.Query("limit"))
 	if err != nil {
-		handler.logger.Error(err.Error())
-		return c.Status(fiber.StatusBadRequest).SendString("Invalid offset value")
-	}
-
-	limit, err := strconv.ParseUint(limitStr, 10, 32)
-	if err != nil {
-		handler.logger.Error(err.Error())
-		return c.Status(fiber.StatusBadRequest).SendString("Invalid limit value")
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
 	postId, _ := uuid.Parse(postIdStr)
