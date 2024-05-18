@@ -21,6 +21,8 @@ func (r repository) CreateLike(ctx context.Context, req shared.CreateLikeRequest
 		return shared.CreateLikeResponse{}, errors.New("context not found")
 	}
 
+	req.Username = claims.UserName
+
 	// post like request
 	if req.PostId != uuid.Nil {
 		post, err := postgres.Read[tables.Post, tables.Post](ctx, map[string]interface{}{"Id": req.PostId})
@@ -31,6 +33,16 @@ func (r repository) CreateLike(ctx context.Context, req shared.CreateLikeRequest
 
 		if post.Id == uuid.Nil {
 			return shared.CreateLikeResponse{}, errors.New("post not found")
+		}
+
+		isLiked, err := postgres.Read[tables.Like, tables.Like](ctx, map[string]interface{}{"PostId": req.PostId})
+		if err != nil {
+			r.logger.Error(err.Error())
+			return shared.CreateLikeResponse{}, err
+		}
+
+		if isLiked.Id != uuid.Nil {
+			return shared.CreateLikeResponse{}, errors.New("already liked")
 		}
 
 		resp, err := postgres.Create[shared.CreateLikeResponse, tables.Like](ctx, req)
@@ -50,6 +62,16 @@ func (r repository) CreateLike(ctx context.Context, req shared.CreateLikeRequest
 
 	if comment.Id == uuid.Nil {
 		return shared.CreateLikeResponse{}, errors.New("comment not found")
+	}
+
+	isLiked, err := postgres.Read[tables.Like, tables.Like](ctx, map[string]interface{}{"CommentId": req.CommentId})
+	if err != nil {
+		r.logger.Error(err.Error())
+		return shared.CreateLikeResponse{}, err
+	}
+
+	if isLiked.Id != uuid.Nil {
+		return shared.CreateLikeResponse{}, errors.New("already liked")
 	}
 
 	resp, err := postgres.Create[shared.CreateLikeResponse, tables.Like](ctx, req)

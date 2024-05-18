@@ -24,8 +24,8 @@ type (
 		Comment string    `json:"comment" validate:"required"`
 	}
 	UpdateCommentResponse struct {
-		Id          uuid.UUID  `json:"id"`
-		UpdatedDate *time.Time `json:"updateDate"`
+		Id              uuid.UUID  `json:"id"`
+		LastUpdatedDate *time.Time `json:"updateDate"`
 	}
 )
 

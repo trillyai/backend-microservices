@@ -14,15 +14,38 @@ import (
 // //////////////////////////////////////////////////////////////////////////////////
 func (handler handler) CreateLike(c *fiber.Ctx) error {
 
-	var req shared.CreateLikeRequest
+	type CreateLikeRequestWithStringDataTypes struct {
+		PostId    string `json:"postId,omitempty"`
+		CommentId string `json:"commentId,omitempty"`
+	}
 
-	if err := c.BodyParser(&req); err != nil {
+	var treq CreateLikeRequestWithStringDataTypes
+
+	if err := c.BodyParser(&treq); err != nil {
 		handler.logger.Error(fmt.Sprintf("failed to parse request body: %v", err))
 		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
-	if req.PostId == req.CommentId && req.PostId == uuid.Nil {
+	if treq.PostId == "" && treq.CommentId == "" {
 		return c.Status(fiber.StatusBadRequest).SendString("postId or commentId required")
+	}
+
+	var req shared.CreateLikeRequest
+
+	if treq.PostId != "" {
+		id, err := uuid.Parse(treq.PostId)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+		}
+		req.PostId = id
+	}
+
+	if treq.CommentId != "" {
+		id, err := uuid.Parse(treq.CommentId)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+		}
+		req.CommentId = id
 	}
 
 	resp, err := handler.svc.CreateLike(c.Context(), req)

@@ -115,6 +115,16 @@ func (r repository) GetComment(ctx context.Context, commentId uuid.UUID) (shared
 		return shared.Comment{}, err
 	}
 
+	post, err := postgres.Read[tables.Post, tables.Post](ctx, map[string]interface{}{"Id": comment.PostId})
+	if err != nil {
+		r.logger.Error(err.Error())
+		return shared.Comment{}, err
+	}
+
+	if post.Id == uuid.Nil {
+		return shared.Comment{}, errors.New("post associated with comment not found")
+	}
+
 	return comment, nil
 
 }
@@ -122,7 +132,7 @@ func (r repository) GetComment(ctx context.Context, commentId uuid.UUID) (shared
 // //////////////////////////////////////////////////////////////////////////////////
 // GetComments implements contracts.Repository.
 // //////////////////////////////////////////////////////////////////////////////////
-func (r repository) GetComments(ctx context.Context, uuid uuid.UUID, username string, forPostId bool, offset uint32, limit uint32) (shared.Comments, error) {
+func (r repository) GetComments(ctx context.Context, uuidVal uuid.UUID, username string, forPostId bool, offset uint32, limit uint32) (shared.Comments, error) {
 
 	var key string
 	var value interface{}
@@ -130,7 +140,7 @@ func (r repository) GetComments(ctx context.Context, uuid uuid.UUID, username st
 	switch forPostId {
 	case true:
 		key = "PostId"
-		value = uuid
+		value = uuidVal
 	default:
 		key = "Username"
 		value = username
@@ -142,6 +152,17 @@ func (r repository) GetComments(ctx context.Context, uuid uuid.UUID, username st
 	if err != nil {
 		r.logger.Error(err.Error())
 		return shared.Comments{}, err
+	}
+
+	if key == "PostId" {
+		post, err := postgres.Read[tables.Post, tables.Post](ctx, map[string]interface{}{"Id": uuidVal})
+		if err != nil {
+			r.logger.Error(err.Error())
+			return shared.Comments{}, err
+		}
+		if post.Id == uuid.Nil {
+			return shared.Comments{}, errors.New("post not found")
+		}
 	}
 
 	ids, err := postgres.Read[[]utils.JustId, tables.Comment](ctx, rule)

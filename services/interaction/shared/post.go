@@ -25,10 +25,10 @@ type (
 		Description string    `json:"description" validate:"required"`
 	}
 	UpdatePostResponse struct {
-		Id          uuid.UUID  `json:"id"`
-		TripId      uuid.UUID  `json:"tripId"`
-		Description string     `json:"description"`
-		UpdatedDate *time.Time `json:"updateDate"`
+		Id              uuid.UUID  `json:"id"`
+		TripId          uuid.UUID  `json:"tripId"`
+		Description     string     `json:"description"`
+		LastUpdatedDate *time.Time `json:"updateDate"`
 	}
 )
 
