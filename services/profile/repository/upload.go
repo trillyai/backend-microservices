@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/trillyai/backend-microservices/core/auth"
+	"github.com/trillyai/backend-microservices/core/env"
 	"github.com/trillyai/backend-microservices/services/profile/shared"
 )
 
@@ -54,8 +55,8 @@ func (r repository) UploadProfileImage(ctx context.Context, request shared.Uploa
 
 	// Upload the profile image
 	_, err = svc.PutObject(&s3.PutObjectInput{
-		Bucket: aws.String("YOUR_BUCKET_NAME"),
-		Key:    aws.String("profile-images/" + claims.UserName + "." + fileExt),
+		Bucket: aws.String(env.AwsProfileImageBucketName),
+		Key:    aws.String(env.AwsProfileImageFolderPath + claims.UserName + "." + fileExt),
 		Body:   file,
 	})
 	if err != nil {
@@ -68,9 +69,9 @@ func (r repository) UploadProfileImage(ctx context.Context, request shared.Uploa
 
 // createAWSSession creates and returns a new AWS session
 func createAWSSession() (*session.Session, error) {
-	accessKey := "YOUR_ACCESS_KEY"
-	secretKey := "YOUR_SECRET_KEY"
-	region := "YOUR_REGION"
+	accessKey := env.AwsProfileImageAccessKey
+	secretKey := env.AwsProfileImageSecretAccessKey
+	region := env.AwsProfileImageRegion
 
 	// Create and return AWS session with provided credentials
 	return session.NewSession(&aws.Config{

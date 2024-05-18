@@ -11,3 +11,11 @@ var (
 )
 
 var HttpPort string
+
+var (
+	AwsProfileImageBucketName      string
+	AwsProfileImageAccessKey       string
+	AwsProfileImageSecretAccessKey string
+	AwsProfileImageFolderPath      string
+	AwsProfileImageRegion          string
+)

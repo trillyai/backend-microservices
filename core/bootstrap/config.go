@@ -31,6 +31,12 @@ func SetUpEnvironment() {
 		"HTTP_PORT",
 
 		"JWT_SECRET_KEY",
+
+		"AWS_PROFILE_IMAGE_BUCKET_NAME",
+		"AWS_PROFILE_IMAGE_FOLDER_PATH",
+		"AWS_PROFILE_IMAGE_ACCESS_KEY",
+		"AWS_PROFILE_IMAGE_SECRET_ACCESS_KEY",
+		"AWS_PROFILE_IMAGE_REGION",
 	}
 
 	// Check if required environment variables exist
@@ -52,6 +58,12 @@ func SetUpEnvironment() {
 	env.Port = port
 	env.JwtSecretKet = []byte(Configs["JWT_SECRET_KEY"])
 	env.HttpPort = Configs["HTTP_PORT"]
+
+	env.AwsProfileImageBucketName = Configs["AWS_PROFILE_IMAGE_BUCKET_NAME"]
+	env.AwsProfileImageFolderPath = Configs["AWS_PROFILE_IMAGE_FOLDER_PATH"]
+	env.AwsProfileImageAccessKey = Configs["AWS_PROFILE_IMAGE_ACCESS_KEY"]
+	env.AwsProfileImageSecretAccessKey = Configs["AWS_PROFILE_IMAGE_SECRET_ACCESS_KEY"]
+	env.AwsProfileImageRegion = Configs["AWS_PROFILE_IMAGE_REGION"]
 }
 
 // loadEnvFileVars loads environment variables from dotenv files.
