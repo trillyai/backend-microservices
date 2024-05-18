@@ -45,13 +45,6 @@ func (handler handler) GetProfile(c *fiber.Ctx) error {
 }
 
 // //////////////////////////////////////////////////////////////////////////////////
-// UploadProfileImage implements contracts.Handler.
-// //////////////////////////////////////////////////////////////////////////////////
-func (handler handler) UploadProfileImage(c *fiber.Ctx) error {
-	return nil
-}
-
-// //////////////////////////////////////////////////////////////////////////////////
 // GetProfiles implements contracts.Handler.
 // //////////////////////////////////////////////////////////////////////////////////
 func (handler handler) GetProfiles(c *fiber.Ctx) error {
@@ -89,6 +82,36 @@ func (handler handler) UpdateProfile(c *fiber.Ctx) error {
 	}
 
 	resp, err := handler.svc.UpdateProfile(c.Context(), req)
+	if err != nil {
+		handler.logger.Error(fmt.Sprintf("failed to process update-profile: %v", err))
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+	}
+
+	return c.Status(fiber.StatusOK).JSON(resp)
+
+}
+
+// //////////////////////////////////////////////////////////////////////////////////
+// UploadProfileImage implements contracts.Handler.
+// //////////////////////////////////////////////////////////////////////////////////
+func (handler handler) UploadProfileImage(c *fiber.Ctx) error {
+
+	var req shared.UploadProfileImageRequest
+
+	file, err := c.FormFile("file")
+	if err != nil {
+		handler.logger.Error(fmt.Sprintf("failed to parse form file: %v", err))
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+	}
+
+	req.File = file
+
+	if err := utils.ValidateStruct(req); err != nil {
+		handler.logger.Error(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+	}
+
+	resp, err := handler.svc.UploadProfileImage(c.Context(), req)
 	if err != nil {
 		handler.logger.Error(fmt.Sprintf("failed to process update-profile: %v", err))
 		return c.Status(fiber.StatusBadRequest).JSON(err.Error())

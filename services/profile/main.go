@@ -77,6 +77,7 @@ func GetServerApp() *fiber.App {
 
 	authMw := app.Group("", middleware.AuthMiddleware)
 	authMw.Put(profiles, handler.UpdateProfile)
+	authMw.Post(profiles, handler.UploadProfileImage)
 
 	logger.Info("Server app initialization completed.")
 	return app
