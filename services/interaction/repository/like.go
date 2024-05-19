@@ -8,6 +8,7 @@ import (
 	"github.com/trillyai/backend-microservices/core/auth"
 	"github.com/trillyai/backend-microservices/core/database/postgres"
 	"github.com/trillyai/backend-microservices/core/database/tables"
+	"github.com/trillyai/backend-microservices/core/utils"
 	"github.com/trillyai/backend-microservices/services/interaction/shared"
 )
 
@@ -35,7 +36,7 @@ func (r repository) CreateLike(ctx context.Context, req shared.CreateLikeRequest
 			return shared.CreateLikeResponse{}, errors.New("post not found")
 		}
 
-		isLiked, err := postgres.Read[tables.Like, tables.Like](ctx, map[string]interface{}{"PostId": req.PostId})
+		isLiked, err := postgres.Read[tables.Like, tables.Like](ctx, map[string]interface{}{"PostId": req.PostId, "Username": claims.UserName})
 		if err != nil {
 			r.logger.Error(err.Error())
 			return shared.CreateLikeResponse{}, err
@@ -64,7 +65,7 @@ func (r repository) CreateLike(ctx context.Context, req shared.CreateLikeRequest
 		return shared.CreateLikeResponse{}, errors.New("comment not found")
 	}
 
-	isLiked, err := postgres.Read[tables.Like, tables.Like](ctx, map[string]interface{}{"CommentId": req.CommentId})
+	isLiked, err := postgres.Read[tables.Like, tables.Like](ctx, map[string]interface{}{"CommentId": req.CommentId, "Username": claims.UserName})
 	if err != nil {
 		r.logger.Error(err.Error())
 		return shared.CreateLikeResponse{}, err
@@ -109,6 +110,8 @@ func (r repository) DeleteLike(ctx context.Context, req shared.DeleteLikeRequest
 		return shared.DeleteLikeResponse{}, err
 	}
 
+	resp.Id = req.Id
+
 	return resp, nil
 
 }
@@ -116,7 +119,7 @@ func (r repository) DeleteLike(ctx context.Context, req shared.DeleteLikeRequest
 // //////////////////////////////////////////////////////////////////////////////////
 // GetLikes implements contracts.Repository.
 // //////////////////////////////////////////////////////////////////////////////////
-func (r repository) GetLikes(ctx context.Context, uuid uuid.UUID, forPostId bool, forCommentId bool, offset uint32, limit uint32) ([]shared.Like, error) {
+func (r repository) GetLikes(ctx context.Context, uuid uuid.UUID, forPostId bool, forCommentId bool, offset uint32, limit uint32) (shared.Likes, error) {
 
 	var key string
 
@@ -127,12 +130,21 @@ func (r repository) GetLikes(ctx context.Context, uuid uuid.UUID, forPostId bool
 		key = "CommentId"
 	}
 
+	ids, err := postgres.Read[[]utils.JustId, tables.Like](ctx, map[string]interface{}{key: uuid})
+	if err != nil {
+		r.logger.Error(err.Error())
+		return shared.Likes{}, err
+	}
+
 	resp, err := postgres.PaginatedRead[[]shared.Like, tables.Like](ctx, map[string]interface{}{key: uuid}, offset, limit)
 	if err != nil {
 		r.logger.Error(err.Error())
-		return []shared.Like{}, err
+		return shared.Likes{}, err
 	}
 
-	return resp, nil
+	return shared.Likes{
+		Likes:     resp,
+		LikeCount: uint64(len(ids)),
+	}, nil
 
 }

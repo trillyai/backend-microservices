@@ -28,9 +28,13 @@ type (
 	}
 )
 
-type Like struct {
-	Id        uuid.UUID `json:"id"`
-	PostId    uuid.UUID `json:"postId,omitempty"`
-	CommentId uuid.UUID `json:"commentId,omitempty"`
-	Username  string    `json:"userName"`
-}
+type (
+	Like struct {
+		Id       uuid.UUID `json:"id"`
+		Username string    `json:"userName"`
+	}
+	Likes struct {
+		Likes     []Like `json:"likes"`
+		LikeCount uint64 `json:"likeCount"`
+	}
+)

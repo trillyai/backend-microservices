@@ -38,14 +38,16 @@ type (
 	}
 )
 
-type Comment struct {
-	Id       uuid.UUID `json:"id"`
-	PostId   uuid.UUID `json:"postId"`
-	Username string    `json:"userName"`
-	Comment  string    `json:"comment"`
-}
+type (
+	Comment struct {
+		Id       uuid.UUID `json:"id"`
+		PostId   uuid.UUID `json:"postId"`
+		Username string    `json:"userName"`
+		Comment  string    `json:"comment"`
+	}
 
-type Comments struct {
-	Comments     []Comment `json:"comments"`
-	CommentCount uint64    `json:"commentCount"`
-}
+	Comments struct {
+		Comments     []Comment `json:"comments"`
+		CommentCount uint64    `json:"commentCount"`
+	}
+)

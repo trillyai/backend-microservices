@@ -93,25 +93,36 @@ func (handler handler) GetLikes(c *fiber.Ctx) error {
 
 	offset, limit, err := utils.GetOffSetAndLimit(c.Query("offset"), c.Query("limit"))
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
-	postId, _ := uuid.Parse(postIdStr)
-	commentId, _ := uuid.Parse(commentIdStr)
+	if postIdStr == "" && commentIdStr == "" {
+		return c.Status(fiber.StatusBadRequest).SendString("use postId or commentId to get likes")
+	}
 
-	if postId != uuid.Nil && commentId != uuid.Nil {
-		return c.Status(fiber.StatusBadRequest).SendString("use just postId or commentId")
+	if postIdStr != "" && commentIdStr != "" {
+		return c.Status(fiber.StatusBadRequest).SendString("use just postId or commentId to get likes")
 	}
 
 	var forPostId bool = false
 	var uid uuid.UUID
 
-	if postId != uuid.Nil {
-		forPostId = true
+	if postIdStr != "" {
+		postId, err := uuid.Parse(postIdStr)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+		}
 		uid = postId
-	} else {
-		forPostId = false
+		forPostId = true
+	}
+
+	if commentIdStr != "" {
+		commentId, err := uuid.Parse(commentIdStr)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+		}
 		uid = commentId
+		forPostId = false
 	}
 
 	resp, err := handler.svc.GetLikes(c.Context(), uid, forPostId, !forPostId, uint32(offset), uint32(limit))
