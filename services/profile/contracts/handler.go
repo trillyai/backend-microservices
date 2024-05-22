@@ -7,4 +7,5 @@ type Handler interface {
 	GetProfile(c *fiber.Ctx) error
 	UpdateProfile(c *fiber.Ctx) error
 	UploadProfileImage(c *fiber.Ctx) error
+	Ping(c *fiber.Ctx) error
 }

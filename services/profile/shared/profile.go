@@ -15,7 +15,6 @@ type (
 		Surname      string     `json:"surname"`
 		Email        string     `json:"email"`
 		Gender       string     `json:"gender"`
-		BirthDate    *time.Time `json:"birthDate"`
 		CreatedDate  *time.Time `json:"createdDate"`
 		Biography    string     `json:"biography"`
 		ProfileImage string     `json:"profileImage,omitempty"`
@@ -24,18 +23,17 @@ type (
 
 type (
 	UpdateProfileRequest struct {
-		Username     string     `json:"username" validate:"required"`
-		Name         string     `json:"name" validate:"required"`
-		Surname      string     `json:"surname" validate:"required"`
-		Email        string     `json:"email" validate:"required"`
-		Gender       string     `json:"gender" validate:"required"`
-		BirthDate    *time.Time `json:"birthDate" validate:"required"`
-		Biography    string     `json:"biography" validate:"required"`
-		ProfileImage string     `json:"profileImage" validate:"required"`
+		Username     string
+		Name         string `json:"name,omitempty"`
+		Surname      string `json:"surname,omitempty"`
+		Email        string `json:"email,omitempty"`
+		Gender       string `json:"gender,omitempty"`
+		Biography    string `json:"biography,omitempty"`
+		ProfileImage string `json:"profileImage,omitempty"`
 	}
 	UpdateProfileResponse struct {
-		Username       string     `json:"username"`
-		LastUpdateDate *time.Time `json:"lastUpatedDate"`
+		Username        string     `json:"username"`
+		LastUpdatedDate *time.Time `json:"lastUpatedDate"`
 	}
 )
 

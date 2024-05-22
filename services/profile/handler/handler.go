@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/trillyai/backend-microservices/core/logger"
+	"github.com/trillyai/backend-microservices/core/ping"
 	"github.com/trillyai/backend-microservices/core/utils"
 	"github.com/trillyai/backend-microservices/services/profile/contracts"
 	"github.com/trillyai/backend-microservices/services/profile/shared"
@@ -23,9 +24,25 @@ func NewHandler(svc contracts.Service) contracts.Handler {
 	}
 }
 
-// //////////////////////////////////////////////////////////////////////////////////
-// GetProfile implements contracts.Handler.
-// //////////////////////////////////////////////////////////////////////////////////
+// API Ping
+// @Summary Check API status
+// @Description Check if the API is running
+// @Tags health
+// @Success 200 {string} string "pong"
+// @Router /ping [get]
+func (handler handler) Ping(c *fiber.Ctx) error {
+	return ping.Ping(c)
+}
+
+// GetProfile
+// @Summary Get profile by username
+// @Description Get profile information by username
+// @Tags profiles
+// @Accept json
+// @Produce json
+// @Param username path string true "Username"
+// @Success 200 {object} shared.GetProfileResponse
+// @Router /profiles/{username} [get]
 func (handler handler) GetProfile(c *fiber.Ctx) error {
 
 	username := c.Params("username")
@@ -44,9 +61,16 @@ func (handler handler) GetProfile(c *fiber.Ctx) error {
 
 }
 
-// //////////////////////////////////////////////////////////////////////////////////
-// GetProfiles implements contracts.Handler.
-// //////////////////////////////////////////////////////////////////////////////////
+// GetProfiles
+// @Summary Get profiles with pagination
+// @Description Get a list of profiles with pagination support
+// @Tags profiles
+// @Accept json
+// @Produce json
+// @Param offset query int false "Offset for pagination"
+// @Param limit query int false "Limit for pagination"
+// @Success 200 {object} []shared.GetProfileResponse
+// @Router /profiles [get]
 func (handler handler) GetProfiles(c *fiber.Ctx) error {
 
 	offset, limit, err := utils.GetOffSetAndLimit(c.Query("offset"), c.Query("limit"))
@@ -64,9 +88,16 @@ func (handler handler) GetProfiles(c *fiber.Ctx) error {
 
 }
 
-// //////////////////////////////////////////////////////////////////////////////////
-// UpdateProfile implements contracts.Handler.
-// //////////////////////////////////////////////////////////////////////////////////
+// UpdateProfile
+// @Summary Update profile
+// @Description Update profile information
+// @Tags profiles
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param body body shared.UpdateProfileRequest true "Update Profile Request"
+// @Success 200 {object} shared.UpdateProfileResponse
+// @Router /profiles [put]
 func (handler handler) UpdateProfile(c *fiber.Ctx) error {
 
 	var req shared.UpdateProfileRequest
@@ -91,9 +122,16 @@ func (handler handler) UpdateProfile(c *fiber.Ctx) error {
 
 }
 
-// //////////////////////////////////////////////////////////////////////////////////
-// UploadProfileImage implements contracts.Handler.
-// //////////////////////////////////////////////////////////////////////////////////
+// UploadProfileImage
+// @Summary Upload profile image
+// @Description Upload a profile image
+// @Tags profiles
+// @Security ApiKeyAuth
+// @Accept mpfd
+// @Produce json
+// @Param file formData file true "Profile Image File"
+// @Success 200 {object} shared.UploadProfileImageResponse
+// @Router /profiles/image [post]
 func (handler handler) UploadProfileImage(c *fiber.Ctx) error {
 
 	var req shared.UploadProfileImageRequest
