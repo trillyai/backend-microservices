@@ -46,4 +46,17 @@ type Post struct {
 	TripId      uuid.UUID `json:"tripId"`
 	Username    string    `json:"userName"`
 	Description string    `json:"description"`
+
+	CommentCount uint64 `json:"commentCount"`
+	LikeCount    uint64 `json:"likeCount"`
+
+	Tags      []string  `json:"tags"`
+	Stattions []Station `json:"stations"`
+}
+
+type Station struct {
+	Name     string      `json:"name"`
+	Latitude string      `json:"lat"`
+	Long     string      `json:"long"`
+	Details  interface{} `json:"details"`
 }
