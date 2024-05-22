@@ -19,7 +19,6 @@ type User struct {
 	Surname      string     `json:"surname"`
 	Email        string     `json:"email"`
 	Gender       string     `json:"gender"`
-	BirthDate    *time.Time `json:"birthDate"`
 	CreatedDate  *time.Time `json:"createdDate"`
 	Biography    string     `json:"biography"`
 	ProfileImage string     `json:"profileImage"`

@@ -1,0 +1,147 @@
+basePath: /
+definitions:
+  shared.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  shared.LoginResponse:
+    properties:
+      token:
+        type: string
+      username:
+        type: string
+    type: object
+  shared.LogoutResponse:
+    properties:
+      endDate:
+        type: string
+      username:
+        type: string
+    type: object
+  shared.RegisterRequest:
+    properties:
+      biography:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      name:
+        type: string
+      password:
+        maxLength: 20
+        minLength: 8
+        type: string
+      surname:
+        type: string
+      username:
+        type: string
+    required:
+    - biography
+    - email
+    - gender
+    - name
+    - password
+    - surname
+    - username
+    type: object
+  shared.RegisterResponse:
+    properties:
+      createdDate:
+        type: string
+      id:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: fiber@swagger.io
+    name: API Support
+  description: This is an authentication server API.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Auth Server API
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login a user and return a token
+      parameters:
+      - description: User login data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/shared.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.LoginResponse'
+      summary: Login a user
+      tags:
+      - auth
+  /logout:
+    post:
+      description: Logout a user and invalidate their token
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.LogoutResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Logout a user
+      tags:
+      - auth
+  /ping:
+    get:
+      description: Check if the API is running
+      responses:
+        "200":
+          description: pong
+          schema:
+            type: string
+      summary: Check API status
+      tags:
+      - health
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with the system
+      parameters:
+      - description: User registration data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/shared.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.RegisterResponse'
+      summary: Register a new user
+      tags:
+      - auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
