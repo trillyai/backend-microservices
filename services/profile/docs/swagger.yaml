@@ -100,6 +100,28 @@ paths:
       summary: Get profiles with pagination
       tags:
       - profiles
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload a profile image
+      parameters:
+      - description: Profile Image File
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - multipart/form-data
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.UploadProfileImageResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Upload profile image
+      tags:
+      - profiles
     put:
       consumes:
       - application/json
@@ -142,29 +164,6 @@ paths:
           schema:
             $ref: '#/definitions/shared.GetProfileResponse'
       summary: Get profile by username
-      tags:
-      - profiles
-  /profiles/image:
-    post:
-      consumes:
-      - multipart/form-data
-      description: Upload a profile image
-      parameters:
-      - description: Profile Image File
-        in: formData
-        name: file
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/shared.UploadProfileImageResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Upload profile image
       tags:
       - profiles
 securityDefinitions:

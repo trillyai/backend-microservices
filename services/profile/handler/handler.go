@@ -128,10 +128,10 @@ func (handler handler) UpdateProfile(c *fiber.Ctx) error {
 // @Tags profiles
 // @Security ApiKeyAuth
 // @Accept mpfd
-// @Produce json
+// @Produce multipart/form-data
 // @Param file formData file true "Profile Image File"
 // @Success 200 {object} shared.UploadProfileImageResponse
-// @Router /profiles/image [post]
+// @Router /profiles [post]
 func (handler handler) UploadProfileImage(c *fiber.Ctx) error {
 
 	var req shared.UploadProfileImageRequest

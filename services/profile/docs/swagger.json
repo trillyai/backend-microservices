@@ -109,9 +109,7 @@
                         }
                     }
                 }
-            }
-        },
-        "/profiles/image": {
+            },
             "post": {
                 "security": [
                     {
@@ -123,7 +121,7 @@
                     "multipart/form-data"
                 ],
                 "produces": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "tags": [
                     "profiles"

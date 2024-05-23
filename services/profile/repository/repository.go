@@ -44,9 +44,6 @@ func (r repository) GetProfileByUsername(ctx context.Context, username string) (
 // GetProfiles implements contracts.Repository.
 // //////////////////////////////////////////////////////////////////////////////////
 func (r repository) GetProfiles(ctx context.Context, offset uint32, limit uint32) ([]shared.GetProfileResponse, error) {
-	if limit >= 50 {
-		return []shared.GetProfileResponse{}, errors.New("limit cannot exceed 50")
-	}
 	resp, err := postgres.PaginatedRead[[]shared.GetProfileResponse, tables.User](ctx, map[string]interface{}{}, offset, limit)
 	if err != nil {
 		return []shared.GetProfileResponse{}, err

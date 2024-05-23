@@ -115,9 +115,7 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/profiles/image": {
+            },
             "post": {
                 "security": [
                     {
@@ -129,7 +127,7 @@ const docTemplate = `{
                     "multipart/form-data"
                 ],
                 "produces": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "tags": [
                     "profiles"
