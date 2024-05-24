@@ -1,0 +1,596 @@
+basePath: /
+definitions:
+  shared.Comment:
+    properties:
+      comment:
+        type: string
+      id:
+        type: string
+      postId:
+        type: string
+      userName:
+        type: string
+    type: object
+  shared.Comments:
+    properties:
+      commentCount:
+        type: integer
+      comments:
+        items:
+          $ref: '#/definitions/shared.Comment'
+        type: array
+    type: object
+  shared.CreateCommentRequest:
+    properties:
+      comment:
+        type: string
+      postId:
+        type: string
+      username:
+        description: extract from token
+        type: string
+    required:
+    - comment
+    - postId
+    type: object
+  shared.CreateCommentResponse:
+    properties:
+      createdDate:
+        type: string
+      id:
+        type: string
+    type: object
+  shared.CreateLikeRequest:
+    properties:
+      commentId:
+        type: string
+      postId:
+        type: string
+      username:
+        type: string
+    type: object
+  shared.CreateLikeResponse:
+    properties:
+      createdDate:
+        type: string
+      id:
+        type: string
+    type: object
+  shared.CreatePostRequest:
+    properties:
+      description:
+        type: string
+      tripId:
+        type: string
+      username:
+        type: string
+    required:
+    - description
+    - tripId
+    type: object
+  shared.CreatePostResponse:
+    properties:
+      createdDate:
+        type: string
+      id:
+        type: string
+    type: object
+  shared.DeleteCommentRequest:
+    properties:
+      id:
+        type: string
+    type: object
+  shared.DeleteCommentResponse:
+    properties:
+      deletedDate:
+        type: string
+    type: object
+  shared.DeleteLikeRequest:
+    properties:
+      id:
+        type: string
+    required:
+    - id
+    type: object
+  shared.DeleteLikeResponse:
+    properties:
+      deletedDate:
+        type: string
+      id:
+        type: string
+    type: object
+  shared.DeletePostReesponse:
+    properties:
+      deletedDate:
+        type: string
+    type: object
+  shared.DeletePostRequest:
+    properties:
+      id:
+        type: string
+    required:
+    - id
+    type: object
+  shared.Like:
+    properties:
+      id:
+        type: string
+      userName:
+        type: string
+    type: object
+  shared.Likes:
+    properties:
+      likeCount:
+        type: integer
+      likes:
+        items:
+          $ref: '#/definitions/shared.Like'
+        type: array
+    type: object
+  shared.Post:
+    properties:
+      commentCount:
+        type: integer
+      description:
+        type: string
+      id:
+        type: string
+      likeCount:
+        type: integer
+      stations:
+        items:
+          $ref: '#/definitions/shared.Station'
+        type: array
+      tags:
+        items:
+          type: string
+        type: array
+      tripId:
+        type: string
+      userName:
+        type: string
+    type: object
+  shared.Station:
+    properties:
+      details: {}
+      lat:
+        type: string
+      long:
+        type: string
+      name:
+        type: string
+    type: object
+  shared.UpdateCommentRequest:
+    properties:
+      comment:
+        type: string
+      id:
+        type: string
+    required:
+    - comment
+    - id
+    type: object
+  shared.UpdateCommentResponse:
+    properties:
+      id:
+        type: string
+      updateDate:
+        type: string
+    type: object
+  shared.UpdatePostRequest:
+    properties:
+      description:
+        type: string
+      id:
+        type: string
+      tripId:
+        type: string
+    required:
+    - description
+    - id
+    - tripId
+    type: object
+  shared.UpdatePostResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: string
+      tripId:
+        type: string
+      updateDate:
+        type: string
+    type: object
+host: localhost:8082
+info:
+  contact:
+    email: fiber@swagger.io
+    name: API Support
+  description: This is an authentication server API.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Interaction Server API
+  version: "1.0"
+paths:
+  /comments:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an existing comment with the given details
+      parameters:
+      - description: Comment to delete
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/shared.DeleteCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.DeleteCommentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete an existing comment
+      tags:
+      - comments
+    get:
+      description: Get a list of comments by username or post ID
+      parameters:
+      - description: Username
+        in: query
+        name: username
+        type: string
+      - description: Post ID
+        in: query
+        name: postId
+        type: string
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.Comments'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Get comments by username or post ID
+      tags:
+      - comments
+    post:
+      consumes:
+      - application/json
+      description: Create a new comment with the given details
+      parameters:
+      - description: Comment to create
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/shared.CreateCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.CreateCommentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new comment
+      tags:
+      - comments
+    put:
+      consumes:
+      - application/json
+      description: Update an existing comment with the given details
+      parameters:
+      - description: Comment to update
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/shared.UpdateCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.UpdateCommentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Update an existing comment
+      tags:
+      - comments
+  /comments/{commentId}:
+    get:
+      description: Get a comment by its ID
+      parameters:
+      - description: Comment ID
+        in: path
+        name: commentId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.Comment'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Get a comment by ID
+      tags:
+      - comments
+  /likes:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a like by providing the details
+      parameters:
+      - description: Like to delete
+        in: body
+        name: like
+        required: true
+        schema:
+          $ref: '#/definitions/shared.DeleteLikeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.DeleteLikeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a like
+      tags:
+      - likes
+    get:
+      description: Get a list of likes by post ID or comment ID
+      parameters:
+      - description: Post ID
+        in: query
+        name: postId
+        type: string
+      - description: Comment ID
+        in: query
+        name: commentId
+        type: string
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.Likes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Get likes by post ID or comment ID
+      tags:
+      - likes
+    post:
+      consumes:
+      - application/json
+      description: Create a new like for a post or a comment
+      parameters:
+      - description: Like to create
+        in: body
+        name: like
+        required: true
+        schema:
+          $ref: '#/definitions/shared.CreateLikeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.CreateLikeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new like
+      tags:
+      - likes
+  /ping:
+    get:
+      description: Check if the API is running
+      responses:
+        "200":
+          description: pong
+          schema:
+            type: string
+      summary: Check API status
+      tags:
+      - health
+  /posts:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an existing post with the given details
+      parameters:
+      - description: Post to delete
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/shared.DeletePostRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.DeletePostReesponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete an existing post
+      tags:
+      - posts
+    get:
+      description: Get a list of posts by user ID
+      parameters:
+      - description: User ID
+        in: query
+        name: userId
+        required: true
+        type: string
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/shared.Post'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Get posts by user ID
+      tags:
+      - posts
+    post:
+      consumes:
+      - application/json
+      description: Create a new post with the given details
+      parameters:
+      - description: Post to create
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/shared.CreatePostRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.CreatePostResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new post
+      tags:
+      - posts
+    put:
+      consumes:
+      - application/json
+      description: Update an existing post with the given details
+      parameters:
+      - description: Post to update
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/shared.UpdatePostRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.UpdatePostResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Update an existing post
+      tags:
+      - posts
+  /posts/{postId}:
+    get:
+      description: Get a post by its ID
+      parameters:
+      - description: Post ID
+        in: path
+        name: postId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.Post'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Get a post by ID
+      tags:
+      - posts
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

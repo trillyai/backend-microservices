@@ -33,7 +33,7 @@ type (
 	DeleteCommentRequest struct {
 		Id uuid.UUID `json:"id"`
 	}
-	DeleteCommentReesponse struct {
+	DeleteCommentResponse struct {
 		DeletedDate *time.Time `json:"deletedDate"`
 	}
 )

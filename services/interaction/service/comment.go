@@ -24,7 +24,7 @@ func (s service) UpdateComment(ctx context.Context, req shared.UpdateCommentRequ
 // //////////////////////////////////////////////////////////////////////////////////
 // DeleteComment implements contracts.Service.
 // //////////////////////////////////////////////////////////////////////////////////
-func (s service) DeleteComment(ctx context.Context, req shared.DeleteCommentRequest) (shared.DeleteCommentReesponse, error) {
+func (s service) DeleteComment(ctx context.Context, req shared.DeleteCommentRequest) (shared.DeleteCommentResponse, error) {
 	return s.repository.DeleteComment(ctx, req)
 }
 

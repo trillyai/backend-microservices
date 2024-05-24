@@ -6,6 +6,7 @@ type Handler interface {
 	postHandler
 	commentHandler
 	likeHandler
+	Ping(c *fiber.Ctx) error
 }
 
 type postHandler interface {

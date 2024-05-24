@@ -77,27 +77,27 @@ func (r repository) UpdateComment(ctx context.Context, req shared.UpdateCommentR
 // //////////////////////////////////////////////////////////////////////////////////
 // DeleteComment implements contracts.Repository.
 // //////////////////////////////////////////////////////////////////////////////////
-func (r repository) DeleteComment(ctx context.Context, req shared.DeleteCommentRequest) (shared.DeleteCommentReesponse, error) {
+func (r repository) DeleteComment(ctx context.Context, req shared.DeleteCommentRequest) (shared.DeleteCommentResponse, error) {
 
 	claims := ctx.Value("user").(*auth.Claims)
 	if claims.Name == "" {
-		return shared.DeleteCommentReesponse{}, errors.New("context not found")
+		return shared.DeleteCommentResponse{}, errors.New("context not found")
 	}
 
 	comment, err := postgres.Read[tables.Comment, tables.Comment](ctx, map[string]interface{}{"Id": req.Id})
 	if err != nil {
 		r.logger.Error(err.Error())
-		return shared.DeleteCommentReesponse{}, err
+		return shared.DeleteCommentResponse{}, err
 	}
 
 	if comment.Username != claims.UserName {
-		return shared.DeleteCommentReesponse{}, errors.New("unauthorized to delete")
+		return shared.DeleteCommentResponse{}, errors.New("unauthorized to delete")
 	}
 
-	resp, err := postgres.Delete[shared.DeleteCommentReesponse, tables.Comment](ctx, map[string]interface{}{"Id": req.Id})
+	resp, err := postgres.Delete[shared.DeleteCommentResponse, tables.Comment](ctx, map[string]interface{}{"Id": req.Id})
 	if err != nil {
 		r.logger.Error(err.Error())
-		return shared.DeleteCommentReesponse{}, err
+		return shared.DeleteCommentResponse{}, err
 	}
 
 	return resp, nil

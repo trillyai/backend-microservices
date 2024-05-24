@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"github.com/trillyai/backend-microservices/core/logger"
+	"github.com/trillyai/backend-microservices/core/ping"
 	"github.com/trillyai/backend-microservices/services/interaction/contracts"
 )
 
@@ -15,4 +17,14 @@ func NewHandler(svc contracts.Service) contracts.Handler {
 		svc:    svc,
 		logger: *logger.NewLogger("interaction-handler"),
 	}
+}
+
+// Ping
+// @Summary Check API status
+// @Description Check if the API is running
+// @Tags health
+// @Success 200 {string} string "pong"
+// @Router /ping [get]
+func (handler handler) Ping(c *fiber.Ctx) error {
+	return ping.Ping(c)
 }

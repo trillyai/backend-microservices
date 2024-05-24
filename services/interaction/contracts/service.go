@@ -24,7 +24,7 @@ type postService interface {
 type commentService interface {
 	CreateComment(ctx context.Context, req shared.CreateCommentRequest) (shared.CreateCommentResponse, error)
 	UpdateComment(ctx context.Context, req shared.UpdateCommentRequest) (shared.UpdateCommentResponse, error)
-	DeleteComment(ctx context.Context, req shared.DeleteCommentRequest) (shared.DeleteCommentReesponse, error)
+	DeleteComment(ctx context.Context, req shared.DeleteCommentRequest) (shared.DeleteCommentResponse, error)
 	GetComment(ctx context.Context, commentId uuid.UUID) (shared.Comment, error)
 	GetComments(ctx context.Context, uuid uuid.UUID, username string, forPostId bool, offset uint32, limit uint32) (shared.Comments, error)
 }
