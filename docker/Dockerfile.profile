@@ -6,9 +6,9 @@ COPY go.sum .
 RUN go mod download
 
 COPY ./core ./core
-COPY ./services/auth ./services/auth
+COPY ./services/profile ./services/profile
 
-RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o profile-service ./services/auth/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o profile-service ./services/profile/main.go
 
 FROM scratch
 WORKDIR /app
