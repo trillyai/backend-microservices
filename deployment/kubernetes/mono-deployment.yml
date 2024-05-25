@@ -1,0 +1,221 @@
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: my-namespace
+
+# ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  # namespace: my-namespace
+data:
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  DB_USER: postgres
+  DB_PASSWORD: cimri
+  DB_DBNAME: grad-auth
+  HTTP_PORT: ":8080"
+  AWS_PROFILE_IMAGE_BUCKET_NAME: trillyai
+  AWS_PROFILE_IMAGE_FOLDER_PATH: profiles/
+  AWS_PROFILE_IMAGE_REGION: us-east-1
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secrets
+  # namespace: my-namespace
+type: Opaque
+data:
+  JWT_SECRET_KEY: dG9wc2VjcmV0
+  AWS_PROFILE_IMAGE_ACCESS_KEY: QUtJQVlCSDJYSlAzMzczS0VK
+  AWS_PROFILE_IMAGE_SECRET_ACCESS_KEY: TldsVTh0ZHpZSWR6MHZ2aDVqR1VMTUVVTzMvM0JPRm1JS2NyaVpV
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  # namespace: my-namespace
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: postgres
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  # namespace: my-namespace
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              value: "cimri"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "200m"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+  # namespace: my-namespace
+spec:
+  selector:
+    matchLabels:
+      app: auth
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: mehmetali10/auth-service
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "200m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+  # namespace: my-namespace
+spec:
+  selector:
+    app: auth
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profile-service
+  # namespace: my-namespace
+spec:
+  selector:
+    matchLabels:
+      app: profile
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: profile
+    spec:
+      containers:
+        - name: profile
+          image: mehmetali10/profile-service
+          ports:
+            - containerPort: 8081
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "200m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: profile-service
+  # namespace: my-namespace
+spec:
+  selector:
+    app: profile
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: interaction-service
+  # namespace: my-namespace
+spec:
+  selector:
+    matchLabels:
+      app: interaction
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: interaction
+    spec:
+      containers:
+        - name: interaction
+          image: mehmetali10/interaction-service
+          ports:
+            - containerPort: 8082
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "200m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: interaction-service
+  # namespace: my-namespace
+spec:
+  selector:
+    app: interaction
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082
