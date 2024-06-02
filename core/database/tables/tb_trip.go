@@ -7,13 +7,12 @@ import (
 	"gorm.io/gorm"
 )
 
-func (Interest) TableName() string {
-	return interestTableName
+func (Trip) TableName() string {
+	return tripTableName
 }
 
-type Interest struct {
+type Trip struct {
 	Id          uuid.UUID  `json:"id" gorm:"type:uuid;primaryKey"`
-	Name        string     `json:"name"`
 	CreatedDate *time.Time `json:"createdDate"`
 
 	IsDeleted       bool
@@ -21,16 +20,16 @@ type Interest struct {
 	LastUpdatedDate *time.Time
 }
 
-func (i *Interest) BeforeCreate(tx *gorm.DB) (err error) {
+func (t *Trip) BeforeCreate(tx *gorm.DB) (err error) {
 	now := time.Now()
-	i.CreatedDate = &now
-	i.IsDeleted = false
-	i.Id = uuid.New()
+	t.CreatedDate = &now
+	t.IsDeleted = false
+	t.Id = uuid.New()
 	return
 }
 
-func (i *Interest) BeforeUpdate(tx *gorm.DB) (err error) {
+func (t *Trip) BeforeUpdate(tx *gorm.DB) (err error) {
 	now := time.Now()
-	i.LastUpdatedDate = &now
+	t.LastUpdatedDate = &now
 	return
 }
