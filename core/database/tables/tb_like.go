@@ -8,7 +8,7 @@ import (
 )
 
 func (Like) TableName() string {
-	return "like_tb"
+	return likeTableName
 }
 
 type Like struct {

@@ -8,7 +8,7 @@ import (
 )
 
 func (Comment) TableName() string {
-	return "comment_tb"
+	return commentTableName
 }
 
 type Comment struct {

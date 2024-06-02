@@ -8,7 +8,7 @@ import (
 )
 
 func (Post) TableName() string {
-	return "post_tb"
+	return postTableName
 }
 
 type Post struct {

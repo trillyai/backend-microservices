@@ -8,7 +8,7 @@ import (
 )
 
 func (User) TableName() string {
-	return "user_tb"
+	return userTableName
 }
 
 type User struct {

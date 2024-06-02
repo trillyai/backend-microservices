@@ -8,7 +8,7 @@ import (
 )
 
 func (Session) TableName() string {
-	return "session_tb"
+	return sessionTableName
 }
 
 type Session struct {
