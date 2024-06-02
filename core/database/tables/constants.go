@@ -18,5 +18,5 @@ const (
 	tripInterestTableName = "trip_interest" + prefix
 	tripVenueTableName    = "trip_venue" + prefix
 
-	postViewedTableName = "post_viewed" + prefix
+	postViewTableName = "post_view" + prefix
 )

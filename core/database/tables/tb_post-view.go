@@ -8,7 +8,7 @@ import (
 )
 
 func (PostView) TableName() string {
-	return postViewedTableName
+	return postViewTableName
 }
 
 type PostView struct {
