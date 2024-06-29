@@ -1,5 +1,7 @@
 package shared
 
+import "github.com/google/uuid"
+
 type (
 	CreateTripRequest struct {
 		Areas    string `validate:"required"`
@@ -8,6 +10,7 @@ type (
 	}
 
 	CreateTripResponse struct {
+		Id uuid.UUID `json:"id"`
 		Root
 	}
 )

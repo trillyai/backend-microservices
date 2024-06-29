@@ -42,6 +42,8 @@ definitions:
         items:
           $ref: '#/definitions/shared.Place'
         type: array
+      id:
+        type: string
       info:
         $ref: '#/definitions/shared.Info'
     type: object
@@ -111,6 +113,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/shared.CreateTripResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
       security:
       - ApiKeyAuth: []
       summary: Creates Trip

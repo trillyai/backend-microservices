@@ -75,6 +75,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/shared.CreateTripResponse"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }
@@ -144,6 +150,9 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/shared.Place"
                     }
+                },
+                "id": {
+                    "type": "string"
                 },
                 "info": {
                     "$ref": "#/definitions/shared.Info"

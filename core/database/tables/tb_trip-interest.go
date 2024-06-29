@@ -14,6 +14,7 @@ func (TripInterest) TableName() string {
 type TripInterest struct {
 	TripId   uuid.UUID `json:"tripId"`
 	Interest string    `json:"interest"`
+	Username string    `json:"username"`
 
 	CreatedDate     *time.Time `json:"createdDate"`
 	IsDeleted       bool

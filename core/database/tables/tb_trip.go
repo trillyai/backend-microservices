@@ -14,6 +14,7 @@ func (Trip) TableName() string {
 
 type Trip struct {
 	Id          uuid.UUID       `json:"id" gorm:"type:uuid;primaryKey"`
+	Username    string          `json:"username"`
 	DataJson    json.RawMessage `json:"data" gorm:"type:jsonb"`
 	CreatedDate *time.Time      `json:"createdDate"`
 

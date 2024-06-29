@@ -42,6 +42,7 @@ func (handler handler) Ping(c *fiber.Ctx) error {
 // @Produce json
 // @Param body body shared.CreateTripRequest true "Create Trip Request"
 // @Success 200 {object} shared.CreateTripResponse
+// @Failure 400 {string} string "Bad Request"
 // @Router /trip [post]
 func (handler handler) CreateTrip(c *fiber.Ctx) error {
 	var req shared.CreateTripRequest
@@ -58,7 +59,7 @@ func (handler handler) CreateTrip(c *fiber.Ctx) error {
 
 	resp, err := handler.svc.CreateTrip(c.Context(), req)
 	if err != nil {
-		handler.logger.Error(fmt.Sprintf("failed to process update-profile: %v", err))
+		handler.logger.Error(fmt.Sprintf("failed to process create-trip %v", err))
 		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 

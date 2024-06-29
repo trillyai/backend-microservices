@@ -44,7 +44,7 @@ func (r repository) CreateTrip(ctx context.Context, req shared.CreateTripRequest
 	}
 
 	jsonRaw, _ := structToJSONRawMessage(output)
-	rowTrip, err := postgres.Create[tables.Trip, tables.Trip](ctx, tables.Trip{DataJson: jsonRaw})
+	createdTrip, err := postgres.Create[tables.Trip, tables.Trip](ctx, tables.Trip{DataJson: jsonRaw, Username: claims.UserName})
 	if err != nil {
 		r.logger.Error(err.Error())
 		return shared.CreateTripResponse{}, err
@@ -52,12 +52,13 @@ func (r repository) CreateTrip(ctx context.Context, req shared.CreateTripRequest
 
 	for _, filter := range filters {
 		postgres.Create[struct{}, tables.TripInterest](ctx, tables.TripInterest{
-			TripId:   rowTrip.Id,
+			TripId:   createdTrip.Id,
 			Interest: filter,
+			Username: claims.UserName,
 		})
 	}
 
-	return shared.CreateTripResponse{Root: output}, nil
+	return shared.CreateTripResponse{Root: output, Id: createdTrip.Id}, nil
 }
 
 // StructToJSONRawMessage converts a struct to json.RawMessage
