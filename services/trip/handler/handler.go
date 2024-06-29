@@ -1,10 +1,14 @@
 package handler
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/trillyai/backend-microservices/core/logger"
 	"github.com/trillyai/backend-microservices/core/ping"
+	"github.com/trillyai/backend-microservices/core/utils"
 	"github.com/trillyai/backend-microservices/services/trip/contracts"
+	"github.com/trillyai/backend-microservices/services/trip/shared"
 )
 
 type handler struct {
@@ -29,7 +33,35 @@ func (handler handler) Ping(c *fiber.Ctx) error {
 	return ping.Ping(c)
 }
 
-// CreateTrip implements contracts.Handler.
+// CreateTrip
+// @Summary Creates Trip
+// @Description creates trip
+// @Tags trip
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param body body shared.CreateTripRequest true "Create Trip Request"
+// @Success 200 {object} shared.CreateTripResponse
+// @Router /trip [post]
 func (handler handler) CreateTrip(c *fiber.Ctx) error {
-	panic("unimplemented")
+	var req shared.CreateTripRequest
+
+	if err := c.BodyParser(&req); err != nil {
+		handler.logger.Error(fmt.Sprintf("failed to parse request body: %v", err))
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+	}
+
+	if err := utils.ValidateStruct(req); err != nil {
+		handler.logger.Error(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+	}
+
+	resp, err := handler.svc.CreateTrip(c.Context(), req)
+	if err != nil {
+		handler.logger.Error(fmt.Sprintf("failed to process update-profile: %v", err))
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+	}
+
+	return c.Status(fiber.StatusOK).JSON(resp)
+
 }

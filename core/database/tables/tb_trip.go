@@ -1,6 +1,7 @@
 package tables
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/google/uuid"
@@ -12,8 +13,9 @@ func (Trip) TableName() string {
 }
 
 type Trip struct {
-	Id          uuid.UUID  `json:"id" gorm:"type:uuid;primaryKey"`
-	CreatedDate *time.Time `json:"createdDate"`
+	Id          uuid.UUID       `json:"id" gorm:"type:uuid;primaryKey"`
+	DataJson    json.RawMessage `json:"data" gorm:"type:jsonb"`
+	CreatedDate *time.Time      `json:"createdDate"`
 
 	IsDeleted       bool
 	DeletedDate     *time.Time

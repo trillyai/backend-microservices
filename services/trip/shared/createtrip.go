@@ -2,9 +2,9 @@ package shared
 
 type (
 	CreateTripRequest struct {
-		Areas    []string
-		Filters  []string
-		Distance float64
+		Areas    string `validate:"required"`
+		Filters  string `validate:"required"`
+		Distance string
 	}
 
 	CreateTripResponse struct {
