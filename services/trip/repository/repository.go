@@ -4,14 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
-	"io"
-	"net/http"
-	"net/url"
 	"strings"
-	"time"
 
 	"github.com/trillyai/backend-microservices/core/auth"
+	"github.com/trillyai/backend-microservices/core/database/postgres"
+	"github.com/trillyai/backend-microservices/core/database/tables"
 	"github.com/trillyai/backend-microservices/core/logger"
 	"github.com/trillyai/backend-microservices/services/trip/contracts"
 	"github.com/trillyai/backend-microservices/services/trip/shared"
@@ -42,89 +39,35 @@ func (r repository) CreateTrip(ctx context.Context, req shared.CreateTripRequest
 		return shared.CreateTripResponse{}, err
 	}
 
-	fmt.Printf("output: %v\n", output)
+	if len(output.Data) == 0 {
+		return shared.CreateTripResponse{}, errors.New("no trip for specified filters and areas")
+	}
+
+	jsonRaw, _ := structToJSONRawMessage(output)
+	rowTrip, err := postgres.Create[tables.Trip, tables.Trip](ctx, tables.Trip{DataJson: jsonRaw})
+	if err != nil {
+		r.logger.Error(err.Error())
+		return shared.CreateTripResponse{}, err
+	}
+
+	for _, filter := range filters {
+		postgres.Create[struct{}, tables.TripInterest](ctx, tables.TripInterest{
+			TripId:   rowTrip.Id,
+			Interest: filter,
+		})
+	}
 
 	return shared.CreateTripResponse{Root: output}, nil
 }
 
-// MakeRequest makes a GET request to the given URL with query parameters and returns the response body
-func prepareRequest(baseURL string, params map[string]string) ([]byte, error) {
-	// Parse the base URL
-	u, err := url.Parse(baseURL)
+// StructToJSONRawMessage converts a struct to json.RawMessage
+func structToJSONRawMessage(v interface{}) (json.RawMessage, error) {
+	// Marshal the struct to JSON
+	data, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
 	}
 
-	// Add query parameters
-	q := u.Query()
-	for key, value := range params {
-		q.Set(key, value)
-	}
-	u.RawQuery = q.Encode()
-
-	// Create a new HTTP client with a timeout
-	client := &http.Client{
-		Timeout: 10 * time.Second,
-	}
-
-	// Create a new request
-	req, err := http.NewRequest(http.MethodGet, u.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	// Send the request
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	// Check the status code
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
-	}
-
-	// Read the response body
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-// sendRequest constructs and sends a request with the given parameters and returns the parsed Root struct
-func sendRequest(areas, filters []string, distance string) (shared.Root, error) {
-	baseURL := "http://localhost:8000/api/generate"
-	params := map[string]string{
-		"filter":   join(filters, ","),
-		"area":     join(areas, ","),
-		"distance": distance,
-	}
-
-	body, err := prepareRequest(baseURL, params)
-	if err != nil {
-		return shared.Root{}, err
-	}
-
-	var root shared.Root
-	err = json.Unmarshal(body, &root)
-	if err != nil {
-		return shared.Root{}, err
-	}
-
-	return root, nil
-}
-
-// join is a helper function to join a slice of strings with a given separator
-func join(elems []string, sep string) string {
-	result := ""
-	for i, elem := range elems {
-		if i > 0 {
-			result += sep
-		}
-		result += elem
-	}
-	return result
+	// Convert the JSON bytes to json.RawMessage
+	return json.RawMessage(data), nil
 }

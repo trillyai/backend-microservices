@@ -20,7 +20,6 @@ func SetUpEnvironment() {
 	loadFlagVars()
 	loadOSVars()
 
-	//TODO: validate configs here
 	requiredEnvVars := []string{
 		"DB_HOST",
 		"DB_PORT",
@@ -37,6 +36,8 @@ func SetUpEnvironment() {
 		"AWS_PROFILE_IMAGE_ACCESS_KEY",
 		"AWS_PROFILE_IMAGE_SECRET_ACCESS_KEY",
 		"AWS_PROFILE_IMAGE_REGION",
+
+		"GENERATE_TRIP_ENDPOINT",
 	}
 
 	// Check if required environment variables exist
@@ -64,6 +65,8 @@ func SetUpEnvironment() {
 	env.AwsProfileImageAccessKey = Configs["AWS_PROFILE_IMAGE_ACCESS_KEY"]
 	env.AwsProfileImageSecretAccessKey = Configs["AWS_PROFILE_IMAGE_SECRET_ACCESS_KEY"]
 	env.AwsProfileImageRegion = Configs["AWS_PROFILE_IMAGE_REGION"]
+
+	env.GenerateTripEndpoint = Configs["GENERATE_TRIP_ENDPOINT"]
 }
 
 // loadEnvFileVars loads environment variables from dotenv files.
