@@ -3,12 +3,19 @@ package repository
 import (
 	"context"
 
+	"github.com/trillyai/backend-microservices/core/database/postgres"
+	"github.com/trillyai/backend-microservices/core/database/tables"
 	"github.com/trillyai/backend-microservices/services/profile/shared"
 )
 
 // GetUserInterests implements contracts.Repository.
-func (r repository) GetUserInterests(ctx context.Context) ([]shared.Interest, error) {
-	panic("unimplemented")
+func (r repository) GetUserInterests(ctx context.Context, username string) ([]shared.Interest, error) {
+	resp, err := postgres.Read[[]shared.Interest, tables.Interest](ctx, map[string]interface{}{})
+	if err != nil {
+		r.logger.Error(err.Error())
+		return nil, err
+	}
+	return resp, nil
 }
 
 // GetInterests implements contracts.Repository.

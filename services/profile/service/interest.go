@@ -7,8 +7,8 @@ import (
 )
 
 // GetUserInterests implements contracts.Service.
-func (s service) GetUserInterests(ctx context.Context) ([]shared.Interest, error) {
-	return s.repository.GetInterests(ctx)
+func (s service) GetUserInterests(ctx context.Context, username string) ([]shared.Interest, error) {
+	return s.repository.GetUserInterests(ctx, username)
 }
 
 // GetInterests implements contracts.Service.

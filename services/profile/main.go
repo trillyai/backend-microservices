@@ -28,8 +28,15 @@ import (
 )
 
 const (
+	username = "/:username"
+
 	profiles             = "/profiles"
-	profilesWithUsername = profiles + "/:username"
+	profilesWithUsername = profiles + username
+
+	interests             = "/interests"
+	interestsWithUsername = interests + username
+
+	swag = "/swagger/*"
 )
 
 func init() {
@@ -91,12 +98,17 @@ func GetServerApp() *fiber.App {
 	app.Get(ping.PingPath, ping.Ping)
 	app.Get(profiles, handler.GetProfiles)
 	app.Get(profilesWithUsername, handler.GetProfile)
+	app.Get(interestsWithUsername, handler.GetUserInterests)
+	app.Get(interests, handler.GetIntersts)
 
-	app.Get("/swagger/*", swagger.HandlerDefault) // default
+	app.Get(swag, swagger.HandlerDefault) // default
 
 	authMw := app.Group("", middleware.AuthMiddleware)
 	authMw.Put(profiles, handler.UpdateProfile)
 	authMw.Post(profiles, handler.UploadProfileImage)
+
+	authMw.Post(interests, handler.CreateUserInterest)
+	authMw.Delete(interests, handler.DeleteUserInterest)
 
 	logger.Info("Server app initialization completed.")
 	return app
