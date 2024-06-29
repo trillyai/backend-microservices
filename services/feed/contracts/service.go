@@ -7,5 +7,5 @@ import (
 )
 
 type Service interface {
-	GenerateFeed(ctx context.Context, offset, limit uint32) (shared.Feed, error)
+	GenerateFeed(ctx context.Context, offset, limit uint32, username string) (shared.Feed, error)
 }

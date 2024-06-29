@@ -11,7 +11,7 @@ type Post struct {
 	UserProfileImage string `json:"userProfileImage"`
 	Description      string `json:"description"`
 
-	LikeCount    string     `json:"likeCount"`
-	CommentCount string     `json:"commentCount"`
+	LikeCount    uint       `json:"likeCount"`
+	CommentCount uint       `json:"commentCount"`
 	CreatedDate  *time.Time `json:"createdDate"`
 }

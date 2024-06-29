@@ -1,0 +1,73 @@
+basePath: /
+definitions:
+  shared.Feed:
+    properties:
+      posts:
+        items:
+          $ref: '#/definitions/shared.Post'
+        type: array
+    type: object
+  shared.Post:
+    properties:
+      commentCount:
+        type: integer
+      createdDate:
+        type: string
+      description:
+        type: string
+      likeCount:
+        type: integer
+      userName:
+        type: string
+      userProfileImage:
+        type: string
+    type: object
+host: localhost:8084
+info:
+  contact:
+    email: support@feed-server.com
+    name: API Support
+  description: This is the API documentation for the feed server.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Feed Server API
+  version: "1.0"
+paths:
+  /feed:
+    get:
+      description: GenerateFeed
+      parameters:
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Username
+        in: query
+        name: username
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.Feed'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: GenerateFeed
+      tags:
+      - Feed
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

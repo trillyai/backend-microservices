@@ -21,6 +21,6 @@ func NewService(repository contracts.Repository) contracts.Service {
 }
 
 // GenerateFeed implements contracts.Service.
-func (s service) GenerateFeed(ctx context.Context, offset uint32, limit uint32) (shared.Feed, error) {
-	return s.repository.GenerateFeed(ctx, offset, limit)
+func (s service) GenerateFeed(ctx context.Context, offset uint32, limit uint32, username string) (shared.Feed, error) {
+	return s.repository.GenerateFeed(ctx, offset, limit, username)
 }
