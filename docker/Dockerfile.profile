@@ -23,7 +23,7 @@ ENV DB_USER=postgres
 ENV DB_PASSWORD=cimri
 ENV DB_DBNAME=grad-auth
 
-EXPOSE 8081
+EXPOSE 8080
 
 ENTRYPOINT ["/app/profile-service"]
 

@@ -14,7 +14,7 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:8082",
+    "host": "192.168.49.2:8082",
     "basePath": "/",
     "paths": {
         "/comments": {

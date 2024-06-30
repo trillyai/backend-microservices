@@ -14,7 +14,7 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:8083",
+    "host": "192.168.49.2:8083",
     "basePath": "/",
     "paths": {
         "/ping": {

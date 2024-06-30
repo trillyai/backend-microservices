@@ -1,14 +1,13 @@
-# apiVersion: v1
-# kind: Namespace
-# metadata:
-#   name: my-namespace
-
-# ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: graduation-project
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: app-config
-  # namespace: my-namespace
+  namespace: graduation-project
 data:
   DB_HOST: postgres
   DB_PORT: "5432"
@@ -19,13 +18,14 @@ data:
   AWS_PROFILE_IMAGE_BUCKET_NAME: trillyai
   AWS_PROFILE_IMAGE_FOLDER_PATH: profiles/
   AWS_PROFILE_IMAGE_REGION: us-east-1
+  GENERATE_TRIP_ENDPOINT: http://trilly-ai-service:8080
 
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: app-secrets
-  # namespace: my-namespace
+  namespace: graduation-project
 type: Opaque
 data:
   JWT_SECRET_KEY: dG9wc2VjcmV0
@@ -37,7 +37,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres
-  # namespace: my-namespace
+  namespace: graduation-project
 spec:
   ports:
     - port: 5432
@@ -49,7 +49,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
-  # namespace: my-namespace
+  namespace: graduation-project
 spec:
   selector:
     matchLabels:
@@ -81,7 +81,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: auth-service
-  # namespace: my-namespace
+  namespace: graduation-project
 spec:
   selector:
     matchLabels:
@@ -115,21 +115,24 @@ apiVersion: v1
 kind: Service
 metadata:
   name: auth-service
-  # namespace: my-namespace
+  namespace: graduation-project
 spec:
+  externalIPs:
+    - 192.168.49.2
   selector:
     app: auth
   ports:
     - protocol: TCP
       port: 8080
       targetPort: 8080
+  type: NodePort
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: profile-service
-  # namespace: my-namespace
+  namespace: graduation-project
 spec:
   selector:
     matchLabels:
@@ -144,7 +147,7 @@ spec:
         - name: profile
           image: mehmetali10/profile-service
           ports:
-            - containerPort: 8081
+            - containerPort: 8080
           envFrom:
             - configMapRef:
                 name: app-config
@@ -163,21 +166,24 @@ apiVersion: v1
 kind: Service
 metadata:
   name: profile-service
-  # namespace: my-namespace
+  namespace: graduation-project
 spec:
+  externalIPs:
+    - 192.168.49.2
   selector:
     app: profile
   ports:
     - protocol: TCP
       port: 8081
-      targetPort: 8081
+      targetPort: 8080
+  type: NodePort
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: interaction-service
-  # namespace: my-namespace
+  namespace: graduation-project
 spec:
   selector:
     matchLabels:
@@ -192,7 +198,7 @@ spec:
         - name: interaction
           image: mehmetali10/interaction-service
           ports:
-            - containerPort: 8082
+            - containerPort: 8080
           envFrom:
             - configMapRef:
                 name: app-config
@@ -211,11 +217,165 @@ apiVersion: v1
 kind: Service
 metadata:
   name: interaction-service
-  # namespace: my-namespace
+  namespace: graduation-project
 spec:
+  externalIPs:
+    - 192.168.49.2
   selector:
     app: interaction
   ports:
     - protocol: TCP
       port: 8082
-      targetPort: 8082
+      targetPort: 8080
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trip-service
+  namespace: graduation-project
+spec:
+  selector:
+    matchLabels:
+      app: trip
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: trip
+    spec:
+      containers:
+        - name: trip
+          image: mehmetali10/trip-service
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "200m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trip-service
+  namespace: graduation-project
+spec:
+  externalIPs:
+    - 192.168.49.2
+  selector:
+    app: trip
+  ports:
+    - protocol: TCP
+      port: 8083
+      targetPort: 8080
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feed-service
+  namespace: graduation-project
+spec:
+  selector:
+    matchLabels:
+      app: feed
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: feed
+    spec:
+      containers:
+        - name: feed
+          image: mehmetali10/feed-service
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "200m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: feed-service
+  namespace: graduation-project
+spec:
+  externalIPs:
+    - 192.168.49.2
+  selector:
+    app: feed
+  ports:
+    - protocol: TCP
+      port: 8084
+      targetPort: 8080
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trilly-ai
+  namespace: graduation-project
+spec:
+  selector:
+    matchLabels:
+      app: trilly-ai
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: trilly-ai
+    spec:
+      containers:
+        - name: trilly-ai
+          image: mehmetali10/trilly-ai
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "200m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trilly-ai-service
+  namespace: graduation-project
+spec:
+  selector:
+    app: trilly-ai
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: NodePort

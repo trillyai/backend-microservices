@@ -53,7 +53,7 @@ func init() {
 // @contact.email fiber@swagger.io
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-// @host localhost:8082
+// @host 192.168.49.2:8082
 // @BasePath /
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header

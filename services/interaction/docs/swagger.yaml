@@ -201,7 +201,7 @@ definitions:
       updateDate:
         type: string
     type: object
-host: localhost:8082
+host: 192.168.49.2:8082
 info:
   contact:
     email: fiber@swagger.io

@@ -49,7 +49,7 @@ func init() {
 // @contact.email support@trip-server.com
 // @license.name MIT
 // @license.url https://opensource.org/licenses/MIT
-// @host localhost:8083
+// @host 192.168.49.2:8083
 // @BasePath /
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
