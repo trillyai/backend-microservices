@@ -1,0 +1,130 @@
+basePath: /
+definitions:
+  shared.AreaInfo:
+    properties:
+      avgLat:
+        type: number
+      avgLon:
+        type: number
+      counts:
+        additionalProperties:
+          type: integer
+        type: object
+    type: object
+  shared.CloseNode:
+    properties:
+      area:
+        type: string
+      filter:
+        type: string
+      id:
+        type: integer
+      lat:
+        type: number
+      lon:
+        type: number
+    type: object
+  shared.CreateTripRequest:
+    properties:
+      areas:
+        type: string
+      distance:
+        type: string
+      filters:
+        type: string
+    required:
+    - areas
+    - filters
+    type: object
+  shared.CreateTripResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/shared.Place'
+        type: array
+      id:
+        type: string
+      info:
+        $ref: '#/definitions/shared.Info'
+    type: object
+  shared.Info:
+    additionalProperties:
+      $ref: '#/definitions/shared.AreaInfo'
+    type: object
+  shared.Place:
+    properties:
+      area:
+        type: string
+      closeNodes:
+        items:
+          $ref: '#/definitions/shared.CloseNode'
+        type: array
+      filter:
+        type: string
+      id:
+        type: integer
+      lat:
+        type: number
+      lon:
+        type: number
+      name:
+        type: string
+    type: object
+host: 192.168.49.2:8083
+info:
+  contact:
+    email: support@trip-server.com
+    name: API Support
+  description: This is the API documentation for the trip server.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Trip Server API
+  version: "1.0"
+paths:
+  /ping:
+    get:
+      description: Check if the API is running
+      responses:
+        "200":
+          description: pong
+          schema:
+            type: string
+      summary: Check API status
+      tags:
+      - health
+  /trip:
+    post:
+      consumes:
+      - application/json
+      description: creates trip
+      parameters:
+      - description: Create Trip Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/shared.CreateTripRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.CreateTripResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Creates Trip
+      tags:
+      - trip
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: grad-project
+data:
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  DB_USER: postgres
+  DB_DBNAME: grad-auth
+  HTTP_PORT: ":8080"
+  AWS_PROFILE_IMAGE_BUCKET_NAME: trillyai
+  AWS_PROFILE_IMAGE_FOLDER_PATH: profiles/
+  AWS_PROFILE_IMAGE_REGION: us-east-1

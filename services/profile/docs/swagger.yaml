@@ -1,0 +1,174 @@
+basePath: /
+definitions:
+  shared.GetProfileResponse:
+    properties:
+      biography:
+        type: string
+      createdDate:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      profileImage:
+        type: string
+      surname:
+        type: string
+      username:
+        type: string
+    type: object
+  shared.UpdateProfileRequest:
+    properties:
+      biography:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      name:
+        type: string
+      profileImage:
+        type: string
+      surname:
+        type: string
+      username:
+        type: string
+    type: object
+  shared.UpdateProfileResponse:
+    properties:
+      lastUpatedDate:
+        type: string
+      username:
+        type: string
+    type: object
+  shared.UploadProfileImageResponse:
+    properties:
+      url:
+        type: string
+    type: object
+host: 192.168.49.2:8081
+info:
+  contact:
+    email: support@profile-server.com
+    name: API Support
+  description: This is the API documentation for the profile server.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Profile Server API
+  version: "1.0"
+paths:
+  /ping:
+    get:
+      description: Check if the API is running
+      responses:
+        "200":
+          description: pong
+          schema:
+            type: string
+      summary: Check API status
+      tags:
+      - health
+  /profiles:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of profiles with pagination support
+      parameters:
+      - description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
+      - description: Limit for pagination
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/shared.GetProfileResponse'
+            type: array
+      summary: Get profiles with pagination
+      tags:
+      - profiles
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload a profile image
+      parameters:
+      - description: Profile Image File
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - multipart/form-data
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.UploadProfileImageResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Upload profile image
+      tags:
+      - profiles
+    put:
+      consumes:
+      - application/json
+      description: Update profile information
+      parameters:
+      - description: Update Profile Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/shared.UpdateProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.UpdateProfileResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update profile
+      tags:
+      - profiles
+  /profiles/{username}:
+    get:
+      consumes:
+      - application/json
+      description: Get profile information by username
+      parameters:
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/shared.GetProfileResponse'
+      summary: Get profile by username
+      tags:
+      - profiles
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

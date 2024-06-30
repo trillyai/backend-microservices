@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+  namespace: grad-project
+spec:
+  selector:
+    matchLabels:
+      app: auth
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: mehmetali10/auth-service
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: DB_PORT
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: DB_PASSWORD
+            - name: DB_DBNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: DB_DBNAME
+            - name: HTTP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: HTTP_PORT
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: JWT_SECRET_KEY
+            - name: AWS_PROFILE_IMAGE_BUCKET_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: AWS_PROFILE_IMAGE_BUCKET_NAME
+            - name: AWS_PROFILE_IMAGE_FOLDER_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: AWS_PROFILE_IMAGE_FOLDER_PATH
+            - name: AWS_PROFILE_IMAGE_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: AWS_PROFILE_IMAGE_ACCESS_KEY
+            - name: AWS_PROFILE_IMAGE_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: AWS_PROFILE_IMAGE_SECRET_ACCESS_KEY
+            - name: AWS_PROFILE_IMAGE_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: AWS_PROFILE_IMAGE_REGION
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+  namespace: grad-project
+spec:
+  selector:
+    app: auth
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
