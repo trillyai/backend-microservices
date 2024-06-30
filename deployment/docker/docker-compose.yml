@@ -75,6 +75,48 @@ services:
       - "8082:8082"
     depends_on:
       - postgres
+      
+  trip-service:
+    image: mehmetali10/trip-service
+    container_name: trip-service
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: postgres
+      DB_PASSWORD: cimri
+      DB_DBNAME: grad-auth
+      HTTP_PORT: ":8082"
+      JWT_SECRET_KEY: topsecret
+      AWS_PROFILE_IMAGE_BUCKET_NAME: trillyai
+      AWS_PROFILE_IMAGE_FOLDER_PATH: profiles/
+      AWS_PROFILE_IMAGE_ACCESS_KEY: AKIAYBH2XJP3373KEJON
+      AWS_PROFILE_IMAGE_SECRET_ACCESS_KEY: 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
+      AWS_PROFILE_IMAGE_REGION: us-east-1
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
+
+  feed-service:
+    image: mehmetali10/feed-service
+    container_name: feed-service
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: postgres
+      DB_PASSWORD: cimri
+      DB_DBNAME: grad-auth
+      HTTP_PORT: ":8082"
+      JWT_SECRET_KEY: topsecret
+      AWS_PROFILE_IMAGE_BUCKET_NAME: trillyai
+      AWS_PROFILE_IMAGE_FOLDER_PATH: profiles/
+      AWS_PROFILE_IMAGE_ACCESS_KEY: AKIAYBH2XJP3373KEJON
+      AWS_PROFILE_IMAGE_SECRET_ACCESS_KEY: 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
+      AWS_PROFILE_IMAGE_REGION: us-east-1
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
 
 volumes:
   postgres_data:
