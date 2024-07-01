@@ -18,7 +18,7 @@ data:
   AWS_PROFILE_IMAGE_BUCKET_NAME: trillyai
   AWS_PROFILE_IMAGE_FOLDER_PATH: profiles/
   AWS_PROFILE_IMAGE_REGION: us-east-1
-  GENERATE_TRIP_ENDPOINT: http://trilly-ai-service:8080
+  GENERATE_TRIP_ENDPOINT: http://trilly-ai-service:8000/api/generate
 
 ---
 apiVersion: v1
@@ -351,7 +351,7 @@ spec:
         - name: trilly-ai
           image: mehmetali10/trilly-ai
           ports:
-            - containerPort: 8080
+            - containerPort: 8000
           envFrom:
             - configMapRef:
                 name: app-config
@@ -376,6 +376,5 @@ spec:
     app: trilly-ai
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
-  type: NodePort
+      port: 8000
+      targetPort: 8000
